@@ -36,10 +36,9 @@ function adicionarLivro(novoLivro) {
 function alugarLivro(id){
     for(let ind in livro){
         if(livro[ind].id == id){
-            livroAlugado.push(livro[ind]);
-            livrosDisponiveis.splice(ind, 1);
+            livroAlugado.push(livro[ind]);            
             console.log("livroAlugado", livroAlugado);
-            return
+            return livrosDisponiveis.splice(ind, 1);
         }
     }
 }
