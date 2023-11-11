@@ -1,6 +1,7 @@
 const repository = require('../repository/userRepository');
 const User = require('../models/users');
 
+
 function listarUsuarios() {
     return repository.listarUsuarios();
 }

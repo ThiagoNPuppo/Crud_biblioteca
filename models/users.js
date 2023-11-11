@@ -3,7 +3,7 @@ class User {
         this.id = id;
         this.username = username;
         this.password = senha;
-        livrosAlugados = [];
+        // livrosAlugados = [];
     }
 }
 

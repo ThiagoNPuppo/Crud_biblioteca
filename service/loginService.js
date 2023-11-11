@@ -4,7 +4,7 @@ const userService = require('./userService');
 const jwtSecret = process.env.JWT_SECRET || 'default_secret';
 
 function Login(username, senha) {
-    const user = userRepository.findUserByUsername(username); // Busca usuário pelo username usando o repositório
+    const user = userRepository.findUserByUsername(username); 
     if (user && bcrypt.compareSync(senha, user.password)) {
         const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
         return { auth: true, token: token };

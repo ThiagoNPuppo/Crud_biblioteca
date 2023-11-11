@@ -1,5 +1,8 @@
+const User = require('../models/users');
+const usuarioInicial = new User(1, 'admin', 'admin');
 let usuarios = [];
 let idUser = 1;
+usuarios.push(usuarioInicial);
 
 function geraId() {
     return idUser++;

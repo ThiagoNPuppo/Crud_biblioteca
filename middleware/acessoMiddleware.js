@@ -1,5 +1,5 @@
 const loginService = require('../service/loginService')
-let token = {};
+const tokens = {};
 
 function verificarAcesso(req, res, next) {
     const token = req.header('X-Auth-Token');
@@ -8,7 +8,7 @@ function verificarAcesso(req, res, next) {
         next();                
     }
     catch(err) {
-        res.status(err.id).json({msg: err.message});
+        res.status(401).json({msg: err.message});
     }
 }
 
