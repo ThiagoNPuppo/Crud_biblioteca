@@ -9,15 +9,15 @@ let livro = [{
     "id": 2,
 }
 ];
-let idLivro = livro.length + 1;
+
 let livroAlugado = [{
     "nome": "O cachaceiro",
     "autor": "Thiago",
     "id": 1,
 }];
-let livroDevolvido = [];
-let livrosDisponiveis = [];
 
+let livrosDisponiveis = [];
+let idLivro = livro.length + 1;
 
 function geraId() {
     return idLivro++;
@@ -33,24 +33,28 @@ function adicionarLivro(novoLivro) {
     livrosDisponiveis.push(novoLivro);
 }
 
-function alugarLivro(id){
-    for(let ind in livro){
-        if(livro[ind].id == id){
-            livroAlugado.push(livro[ind]);            
-            console.log("livroAlugado", livroAlugado);
-            return livrosDisponiveis.splice(ind, 1);
-        }
+function alugarLivro(bookId, userId) {
+    const index = livros.findIndex(livro => livro.id === bookId);
+    if (index === -1 || livros[index].alugado) {
+        throw new Error("Livro não disponível para aluguel.");
     }
+    livrosDisponiveis.splice(index, 1); 
+    livros[index].alugado = true; 
+    livros[index].userId = userId; 
+    livrosAlugados.push(livros[index]); 
+    return livros[index];
 }
 
-function devolverLivro(id){
-    for(let ind in livroAlugado){
-        if(livroAlugado[ind].id == id){
-            livroDevolvido.push(livroAlugado[ind]);
-            livrosDisponiveis.push(livroAlugado[ind]);
-            return livroAlugado.splice(ind, 1);
-        }
+function devolverLivro(bookId) {
+    const index = livros.findIndex(livro => livro.id === bookId);
+    if (index === -1 || !livros[index].alugado) {
+        throw new Error("Livro não está alugado.");
     }
+
+    livros[index].alugado = false; 
+    delete livros[index].userId; 
+    livrosAlugados = livrosAlugados.filter(livro => livro.id !== bookId); 
+    return livros[index];
 }
 
 function removerLivro(id) {

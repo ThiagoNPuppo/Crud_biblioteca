@@ -41,11 +41,22 @@ function buscarUsuario(id) {
     }
 }
 
+function buscarUsuarioPorNome(nome) {
+    return usuarios.find(usuario => usuario.nome === nome);
+}
+
+function validarSenha(nome, senha) {
+    const usuario = buscarUsuarioPorNome(nome);
+    return usuario && usuario.senha === senha;
+}
+
 module.exports = {
     listarUsuarios,
     adicionarUsuario,
     removerUsuario,
     atualizarUsuario,
-    buscarUsuario
+    buscarUsuario,
+    buscarUsuarioPorNome,
+    validarSenha
 
 }

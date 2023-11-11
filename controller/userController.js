@@ -6,8 +6,8 @@ function listarUsuarios(req, res) {
 }
 
 function adicionarUsuario(req, res) {
-    const {nome, telefone} = req.body;
-    const usuario = {nome, telefone};
+    const {nome, telefone, senha} = req.body;
+    const usuario = {nome, telefone, senha};
     try{
         userService.adicionarUsuario(usuario);
         res.status(201).json({msg: 'Usuário adicionado com sucesso!'});
@@ -16,7 +16,6 @@ function adicionarUsuario(req, res) {
         res.status(err.id).json({msg: err.msg});
     }
 }
-
 
 function removerUsuario(req, res) {
     const id = req.params.id;
@@ -52,11 +51,24 @@ function buscarUsuario(req, res){
     }
 }
 
+function loginUser(req, res) {
+    const {nome, senha} = req.body;
+    try{
+        const token = userService.loginUser(nome, senha);
+        res.status(200).json({token: token});
+    }
+    catch(err){
+        res.status(err.id).json({msg: err.msg});
+    }
+}
+
+
 
 module.exports = {
     listarUsuarios,
     adicionarUsuario,
     removerUsuario,
     atualizarUsuario,
-    buscarUsuario
+    buscarUsuario,
+    loginUser,
 }

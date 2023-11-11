@@ -1,4 +1,5 @@
 const loginService = require('../service/loginService')
+let token = {};
 
 function verificarAcesso(req, res, next) {
     const token = req.header('X-Auth-Token');
@@ -11,4 +12,12 @@ function verificarAcesso(req, res, next) {
     }
 }
 
-module.exports = { verificarAcesso }
+function gerarToken(usuario) {
+    const token = usuario.nome + "-" + new Date().getTime();
+    tokens[token] = usuario; 
+    return token;
+}
+
+
+module.exports = { verificarAcesso, gerarToken};
+

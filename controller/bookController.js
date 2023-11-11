@@ -1,16 +1,19 @@
 const bookService = require('../service/bookService');
 
 function listarLivros(req, res) {
-    const listaLivro = bookService.listarLivros();
-    res.json(listaLivro);
+    try {
+        const listaLivro = bookService.listarLivros();
+        res.json(listaLivro);
+    } catch (err) {
+        res.status(err.id).json({msg: err.msg});
+    }
 }
 
 function adicionarLivro(req, res) {
     const {nome, autor} = req.body;
-    const livro = {nome, autor};
     try{
-        bookService.adicionarLivro(livro);
-        res.status(201).json({msg: 'Livro adicionado com sucesso!'});
+        const livro = bookService.adicionarLivro(nome, autor);
+        res.status(201).json(livro);
     }
     catch(err){
         res.status(err.id).json({msg: err.msg});
@@ -43,10 +46,9 @@ function atualizarLivro(req, res){
 function alugarLivro(req, res){
     const id = req.params.id;
     try{
-        bookService.alugarLivro(id);
-        res.status(200).json({msg: 'Livro alugado com sucesso!'});
-    }
-    catch(err){
+        const livro = bookService.alugarLivro(id);
+        res.status(200).json({msg: 'Livro' + livro.nome + 'alugado com sucesso!'});
+    } catch(err){
         res.status(err.id).json({msg: err.msg});
     }
 }
@@ -63,27 +65,33 @@ function devolverLivro(req, res){
 }
 
 function listarLivrosAlugados(req, res){
-    const listarAlugados = bookService.listarLivrosAlugados();
-    res.json(listarAlugados);
+    try{
+        const listarAlugados = bookService.listarLivrosAlugados();
+        res.json(listarAlugados);
+    }catch(err){
+        res.status(err.id).json({msg: err.msg});
+    }
 }
 
 function listarLivrosDisponiveis(req, res){
-    const livrosDisponiveis = bookService.listarLivrosDisponiveis();
-    res.json(livrosDisponiveis);
+    try{
+        const listarDisponiveis = bookService.listarLivrosDisponiveis();
+        res.json(listarDisponiveis);
+    } catch(err){
+        res.status(err.id).json({msg: err.msg});
+    } 
 }
 
 function buscarLivro(req, res){
-    const id = req.params.id;
+    const nome = req.params.nome;
     try{
-        const livro = bookService.buscarLivro(id);
+        const livro = bookService.buscarLivro(nome);
         res.status(200).json(livro);
     }
     catch(err){
         res.status(err.id).json({msg: err.msg});
     }
 }
-
-
 
 module.exports = {
     listarLivros,
