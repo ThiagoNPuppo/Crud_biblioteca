@@ -1,39 +1,25 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const userService = require('./userService');
+const jwtSecret = process.env.JWT_SECRET || 'default_secret';
 
-const usuario = {
-    id: 1,
-    nome: 'Thiago',
-    username: 'thi',
-    senha: '1234'
-}
-
-const jwtSecret = 'senac';
-
-function Login(login) {
-    if(login && login.username && login.senha) {
-        if(login.username == usuario.username && login.senha == usuario.senha){
-            const token = jwt.sign(
-                {usuario:usuario.id}, 
-                jwtSecret,
-                { expiresIn: '1h' });
-            return token;            
-        }        
+function Login(username, senha) {
+    const user = userRepository.findUserByUsername(username); // Busca usuário pelo username usando o repositório
+    if (user && bcrypt.compareSync(senha, user.password)) {
+        const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+        return { auth: true, token: token };
     }
-    throw {id: 401, message: "Usuário ou senha invalidos"};
+    throw new Error("Usuário ou senha inválidos"); 
 }
 
 function validarToken(token) {
     try{
-        const payload = jwt.verify(token, jwtSecret);
-        if(payload) {
-            console.log(payload.usuario);
-            return(payload);
-        }
-        else {
-            throw {id: 401, message: "Acesso negado!"};
-        }
+        const decoded = jwt.verify(token, jwtSecret);
+        const user = userRepository.findUserById(decoded.userId);
+        if(!user) throw new Error("Acesso negado!");
+        return decoded;
     } catch(error) {
-        throw {id: 401, message: "Acesso negado!"};
+        throw new Error ("Token inválido ou expirado");
     }
 }
 

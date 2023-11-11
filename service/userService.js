@@ -1,4 +1,5 @@
 const repository = require('../repository/userRepository');
+const User = require('../models/users');
 
 function listarUsuarios() {
     return repository.listarUsuarios();
@@ -6,7 +7,8 @@ function listarUsuarios() {
 
 function adicionarUsuario(usuario) {
     if(usuario && usuario.nome && usuario.telefone){
-        repository.adicionarUsuario(usuario);
+        const userAdicionado = new User(usuario.nome, usuario.telefone, usuario.senha);
+        repository.adicionarUsuario(userAdicionado);
     }
     else{
         throw {id: 400, msg: 'Faltam informações para adicionar o usuário!'}

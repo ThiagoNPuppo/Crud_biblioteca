@@ -1,13 +1,5 @@
 const repositoryb = require('../repository/bookRepository');
-
-class Livro {
-    constructor(id, nome, autor) {
-        this.id = id;
-        this.nome = nome;
-        this.autor = autor;
-        this.alugado = false;
-    }
-}
+const Book = require('../models/books');
 
 function listarLivros() {
     return repositoryb.listarLivros();
@@ -15,7 +7,7 @@ function listarLivros() {
 
 function adicionarLivro(nome, autor) {
     if(nome && autor){
-        const novoLivro = new Livro(repositoryb.geraId(), nome, autor);
+        const novoLivro = new Book(repositoryb.geraId(), nome, autor);
         return repositoryb.adicionarLivro(novoLivro);
     }    
     else{

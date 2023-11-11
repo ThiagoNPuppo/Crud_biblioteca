@@ -15,40 +15,33 @@ function adicionarUsuario(usuario) {
 }
 
 function removerUsuario(id) {
-    for(let ind in usuarios){
-        if(usuarios[ind].id == id){
-            return usuarios.splice(ind, 1);
-        }
+    id = parseInt(id);
+    const index = usuarios.findIndex(u => u.id === id);
+    if (index !== -1) {
+        return usuarios.splice(index, 1);
     }
 }
 
+
 function atualizarUsuario(id, nome, telefone) {
     id = parseInt(id);
-    for(let i in usuarios){
-        if(usuarios[i].id === id){
-            usuarios[i].nome = nome;
-            usuarios[i].telefone = telefone;
-            return usuarios[i];
-        }
+    const usuario = usuarios.find(u => u.id === id);
+    if (usuario) {
+        usuario.nome = nome;
+        usuario.telefone = telefone;
+        return usuario;
     }
 }
 
 function buscarUsuario(id) {
-    for(let i in usuarios){
-        if(usuarios[i].id == id){
-            return usuarios[i];
-        }
-    }
+    id = parseInt(id);
+    return usuarios.find(u => u.id === id);
 }
 
-function buscarUsuarioPorNome(nome) {
-    return usuarios.find(usuario => usuario.nome === nome);
+function buscarUsuarioPorUsername(username) {
+    return usuarios.find(usuario => usuario.username === username);
 }
 
-function validarSenha(nome, senha) {
-    const usuario = buscarUsuarioPorNome(nome);
-    return usuario && usuario.senha === senha;
-}
 
 module.exports = {
     listarUsuarios,
@@ -56,7 +49,5 @@ module.exports = {
     removerUsuario,
     atualizarUsuario,
     buscarUsuario,
-    buscarUsuarioPorNome,
-    validarSenha
-
+    buscarUsuarioPorUsername
 }

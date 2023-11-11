@@ -3,8 +3,8 @@ const userRouter = require('./router/userRouter');
 const bookRouter = require('./router/bookRouter');
 const acessoMiddleware = require('./middleware/acessoMiddleware')
 const loginRouter = require('./router/loginRouter');
-const User = require('./models/user');
-const Book = require('./models/book');
+const User = require('./models/users');
+const Book = require('./models/books');
 
 const app = express();
 const port = 3000;
