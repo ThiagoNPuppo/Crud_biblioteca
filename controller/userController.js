@@ -52,9 +52,9 @@ function buscarUsuario(req, res){
 }
 
 function loginUser(req, res) {
-    const {nome, senha} = req.body;
+    const {username, senha} = req.body;
     try{
-        const token = userService.loginUser(nome, senha);
+        const token = userService.loginUser(username, senha);
         res.status(200).json({token: token});
     }
     catch(err){
