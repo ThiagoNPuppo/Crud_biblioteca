@@ -22,8 +22,8 @@ app.get('/', (req, res) => {
 
 app.use('/login', loginRouter);
 
-app.use('/users', acessoMiddleware.verificarAcesso, userRouter);
-app.use('/books', acessoMiddleware.verificarAcesso, bookRouter);
+app.use('/users', userRouter);
+app.use('/books', bookRouter);
 
 
 app.listen(port, () => {

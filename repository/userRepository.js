@@ -1,5 +1,5 @@
-const User = require('../models/users');
-const usuarioInicial = User.Usuario(1, 'admin', 'admin');
+const Usuario = require('../models/users');
+const usuarioInicial = new Usuario(1, 'admin', '51.99959995', 'admin');
 let usuarios = [];
 let idUser = 1;
 usuarios.push(usuarioInicial);

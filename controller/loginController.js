@@ -5,7 +5,7 @@ function Login(req,res){
 
     try {
         const token = loginService.Login(login);
-        res.status(201).json({token:token})
+        res.status(200).json({token:token})
       }
       catch(err) {        
         res.status(err.id).json({msg: err.message});
