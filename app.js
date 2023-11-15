@@ -24,7 +24,8 @@ app.use('/login', loginRouter);
 
 app.use('/users', userRouter);
 app.use('/books', bookRouter);
-
+app.use('/disponiveis', bookRouter)
+app.use('/alugados', bookRouter)
 
 app.listen(port, () => {
     console.log(`Porta ${port} bombando!!!`);

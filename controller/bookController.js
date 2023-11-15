@@ -69,8 +69,8 @@ function devolverLivro(req, res){
 
 function listarLivrosAlugados(req, res){
     try{
-        const listarAlugados = bookService.listarLivrosAlugados();
-        res.json(listarAlugados);
+        const livrosAlugados = bookService.getAlugados();
+        res.json(livrosAlugados);
     }catch(err){
         res.status(err.id).json({msg: err.msg});
     }
@@ -78,10 +78,11 @@ function listarLivrosAlugados(req, res){
 
 function listarLivrosDisponiveis(req, res){
     try{
-        const listarDisponiveis = bookService.listarLivrosDisponiveis();
-        res.json(listarDisponiveis);
+        const livrosDisponiveis = bookService.getDisponiveis();
+        res.json(livrosDisponiveis);
     } catch(err){
-        res.status(err.id).json({msg: err.msg});
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
     } 
 }
 

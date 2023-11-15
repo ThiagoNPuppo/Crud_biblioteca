@@ -11,8 +11,19 @@ let livro = [{
     "estado": "disponivel"  
 }
 ];
-let livroAlugado = [];
-let livrosDisponiveis = [];
+
+let livrosDisponiveis = [{
+    "id": 1,
+    "nome": "O cachaceiro",
+    "autor": "Thiago",
+    "estado": "disponivel"
+},
+{
+    "id": 2,
+    "nome": "Grêmio",
+    "autor": "gremista",
+    "estado": "disponivel"  
+}];
 let livrosAlugados = [];
 let idLivro = livro.length + 1;
 
@@ -30,27 +41,27 @@ function adicionarLivro(novoLivro) {
 }
 
 function alugarLivro(bookID, userID) {
-    const index = livros.findIndex(livro => livro.id == bookID);
-    if (index === -1 || livros[index].alugado) {
+    const index = livro.findIndex(livro => livro.id == bookID);
+    if (index === -1 || livro[index].alugado) {
         throw new Error("Livro não disponível para aluguel.");
     }
     livrosDisponiveis.splice(index, 1); 
-    livros[index].alugado = true; 
-    livros[index].userId = userID; 
-    livrosAlugados.push(livros[index]);
-    return livros[index];
+    livro[index].alugado = "Alugado !"; 
+    livro[index].userId = userID; 
+    livrosAlugados.push(livro[index]);
+    return livro[index];
 }
 
 function devolverLivro(bookId) {
-    const index = livros.findIndex(livro => livro.id === bookId);
-    if (index === -1 || !livros[index].alugado) {
+    const index = livro.findIndex(livro => livro.id === bookId);
+    if (index === -1 || !livro[index].alugado) {
         throw new Error("Livro não está alugado.");
     }
 
-    livros[index].alugado = false; 
-    delete livros[index].userId; 
+    livro[index].alugado = "Disponível"; 
+    delete livro[index].userId; 
     livrosAlugados = livrosAlugados.filter(livro => livro.id !== bookId); 
-    return livros[index];
+    return livro[index];
 }
 
 function removerLivro(id) {
@@ -71,13 +82,16 @@ function atualizarLivro(id, nome, autor){
 }
 
 function listarLivrosAlugados(){
-    return livroAlugado;
+    if (livrosAlugados.length === 0) {
+        throw new Error("Nenhum livro alugado.");
+    }
+    return livrosAlugados;
 }
 
 function listarLivrosDisponiveis() {
-    const livrosDisponiveis = livro.filter(livro => {
-        return !livroAlugado.some(alugado => alugado.id === livro.id);
-    });
+    if (livrosDisponiveis.length === 0) {
+        throw new Error("Nenhum livro disponível.");
+    }
     return livrosDisponiveis;
 }
 

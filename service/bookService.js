@@ -75,7 +75,7 @@ function devolverLivro(bookId) {
 
 
 
-function listarLivrosAlugados() {
+function getDisponiveis() {
     try {
         return bookRepository.listarLivrosAlugados();
     } catch (err) {
@@ -83,7 +83,7 @@ function listarLivrosAlugados() {
     }
 }
 
-function listarLivrosDisponiveis() {
+function getAlugados() {
     try {
         return bookRepository.listarLivrosDisponiveis();
     } catch (err) {
@@ -124,8 +124,8 @@ module.exports = {
     atualizarLivro,
     alugarLivro,
     devolverLivro,
-    listarLivrosAlugados,
-    listarLivrosDisponiveis,
+    getAlugados,
+    getDisponiveis,
     buscarLivroPorNome,
     buscarLivroPorId
 }

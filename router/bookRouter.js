@@ -11,7 +11,7 @@ bookRouter.delete('/:id', bookController.removerLivro);
 bookRouter.put('/:id', bookController.atualizarLivro);
 bookRouter.put('/aluga/:idbook/:idUser', bookController.alugarLivro);
 bookRouter.put('/devolve/:idbook/:idUser', bookController.devolverLivro);
-bookRouter.get('/alugados', bookController.listarLivrosAlugados);
-bookRouter.get('/disponiveis', bookController.listarLivrosDisponiveis);
+//bookRouter.get('/alugados', bookController.listarLivrosAlugados);
+//bookRouter.get('/', bookController.listarLivrosDisponiveis);
 
 module.exports = bookRouter;
