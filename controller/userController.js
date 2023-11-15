@@ -58,7 +58,8 @@ function loginUser(req, res) {
         res.status(200).json({token: token});
     }
     catch(err){
-        res.status(err.id).json({msg: err.msg});
+        const statusCode = err.id || 500;    
+        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }
 

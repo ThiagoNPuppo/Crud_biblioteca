@@ -5,7 +5,8 @@ function listarLivros(req, res) {
         const listaLivro = bookService.listarLivros();
         res.json(listaLivro);
     } catch (err) {
-        res.status(err.id).json({msg: err.msg});
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }
 
@@ -45,12 +46,13 @@ function atualizarLivro(req, res){
 }
 
 function alugarLivro(req, res){
-    const id = req.params.id;
+    const ids = { userID: req.params.idUser, bookID: req.params.idbook };
     try{
-        const livro = bookService.alugarLivro(id);
-        res.status(200).json({msg: 'Livro' + livro.nome + 'alugado com sucesso!'});
+        const livro = bookService.alugarLivro(ids);
+        res.status(200).json({msg: 'Livro ' + livro.nome + ' alugado com sucesso!'});
     } catch(err){
-        res.status(err.id).json({msg: err.msg});
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }
 
@@ -83,10 +85,21 @@ function listarLivrosDisponiveis(req, res){
     } 
 }
 
-function buscarLivro(req, res){
+function buscarLivroPorNome(req, res){
     const nome = req.params.nome;
     try{
         const livro = bookService.buscarLivro(nome);
+        res.status(200).json(livro);
+    }
+    catch(err){
+        res.status(err.id).json({msg: err.msg});
+    }
+}
+
+function buscarLivroPorId(req, res){
+    const id = req.params.id;
+    try{
+        const livro = bookService.buscarLivroPorId(id);
         res.status(200).json(livro);
     }
     catch(err){
@@ -103,5 +116,6 @@ module.exports = {
     devolverLivro,
     listarLivrosAlugados,
     listarLivrosDisponiveis,
-    buscarLivro
+    buscarLivroPorNome,
+    buscarLivroPorId
 }

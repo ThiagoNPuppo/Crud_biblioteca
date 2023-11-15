@@ -1,15 +1,23 @@
-const repositoryb = require('../repository/bookRepository');
+const bookRepository = require('../repository/bookRepository');
 const Book = require('../models/books');
 
 function listarLivros() {
-    return repositoryb.listarLivros();
+    const livros = bookRepository.listarLivros();
+    const livroAlugado = livros.map(livro => {
+        if (livro.alugado) {
+            const {estado, ...livroAlugado} = livro;
+            return livroAlugado;
+        }
+        return livro;
+    });
+    return livroAlugado;
 }
 
 function adicionarLivro(nome, autor) {
     if(nome && autor){
-        const id = repositoryb.geraId();
+        const id = bookRepository.geraId();
         const novoLivro = new Book(id, nome, autor);
-        return repositoryb.adicionarLivro(novoLivro);
+        return bookRepository.adicionarLivro(novoLivro);
     }    
     else{
         throw {id: 400, msg: 'Faltam informações para adicionar o livro!'}
@@ -17,7 +25,7 @@ function adicionarLivro(nome, autor) {
 }
 
 function removerLivro(id) {
-    const livroDeletado = repositoryb.removerLivro(id);
+    const livroDeletado = bookRepository.removerLivro(id);
     if(livroDeletado){
         return livroDeletado;
     }
@@ -27,7 +35,7 @@ function removerLivro(id) {
 }
 
 function atualizarLivro(id, nome, autor){
-    const livroAtualizado = repositoryb.atualizarLivro(id, nome, autor);
+    const livroAtualizado = bookRepository.atualizarLivro(id, nome, autor);
     if(livroAtualizado){
         return livroAtualizado;
     }
@@ -38,8 +46,9 @@ function atualizarLivro(id, nome, autor){
 }
 
 
-function alugarLivro(userID, bookId) {
-    const livro = repository.buscarLivroPorId(bookId);
+function alugarLivro(ids) {
+    const { userID, bookID } = ids;
+    const livro = bookRepository.buscarLivroPorId(bookID);
     if (livro) {
         if (!livro.alugado) {
             livro.alugado = true;
@@ -55,20 +64,20 @@ function alugarLivro(userID, bookId) {
 
 
 function devolverLivro(bookId) {
-    const livroAlugadoIndex = repositoryb.livroAlugado.findIndex(l => l.id === bookId);
+    const livroAlugadoIndex = bookRepository.livroAlugado.findIndex(l => l.id === bookId);
     if (livroAlugadoIndex === -1) {
         throw { id: 400, msg: 'Livro não está alugado.' };
     }
 
-    repositoryb.livrosDisponiveis.push(repositoryb.livroAlugado[livroAlugadoIndex]);
-    repositoryb.livroAlugado.splice(livroAlugadoIndex, 1);
+    bookRepository.livrosDisponiveis.push(bookRepository.livroAlugado[livroAlugadoIndex]);
+    bookRepository.livroAlugado.splice(livroAlugadoIndex, 1);
 }
 
 
 
 function listarLivrosAlugados() {
     try {
-        return repositoryb.listarLivrosAlugados();
+        return bookRepository.listarLivrosAlugados();
     } catch (err) {
         throw { id: 500, msg: 'Erro ao listar os livros alugados.' };
     }
@@ -76,7 +85,7 @@ function listarLivrosAlugados() {
 
 function listarLivrosDisponiveis() {
     try {
-        return repositoryb.listarLivrosDisponiveis();
+        return bookRepository.listarLivrosDisponiveis();
     } catch (err) {
         throw { id: 500, msg: 'Erro ao listar os livros disponíveis.' };
     }
@@ -84,7 +93,7 @@ function listarLivrosDisponiveis() {
 
 function buscarLivroPorNome(nome) {
     try {
-        const livro = repositoryb.buscarLivroPorNome(nome);
+        const livro = bookRepository.buscarLivroPorNome(nome);
         if (livro) {
             return livro;
         } else {
@@ -95,7 +104,18 @@ function buscarLivroPorNome(nome) {
     }
 }
 
-
+function buscarLivroPorId(id) {
+    try {
+        const livro = bookRepository.buscarLivroPorId(id);
+        if (livro) {
+            return livro;
+        } else {
+            throw { id: 404, msg: 'Livro não encontrado!' };
+        }
+    } catch (err) {
+        throw { id: 500, msg: 'Erro ao buscar o livro.' };
+    }
+}
 
 module.exports = {
     listarLivros,
@@ -106,5 +126,6 @@ module.exports = {
     devolverLivro,
     listarLivrosAlugados,
     listarLivrosDisponiveis,
-    buscarLivroPorNome
+    buscarLivroPorNome,
+    buscarLivroPorId
 }
