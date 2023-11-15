@@ -1,22 +1,26 @@
 let livro = [{
+    "id": 1,
     "nome": "O cachaceiro",
     "autor": "Thiago",
-    "id": 1,
+    "estado": "disponivel"
 },
 {
+    "id": 2,
     "nome": "Grêmio",
     "autor": "gremista",
-    "id": 2,
+    "estado": "disponivel"  
 }
 ];
 
 let livroAlugado = [{
+    "id": 1,
     "nome": "O cachaceiro",
     "autor": "Thiago",
-    "id": 1,
+    "estado": "alugado"
 }];
 
 let livrosDisponiveis = [];
+let livrosAlugados = [];
 let idLivro = livro.length + 1;
 
 function geraId() {
@@ -28,7 +32,6 @@ function listarLivros() {
 }
 
 function adicionarLivro(novoLivro) {
-    novoLivro.id = geraId();
     livro.push(novoLivro);
     livrosDisponiveis.push(novoLivro);
 }
@@ -95,6 +98,7 @@ function buscarLivro(id){
 
 
 module.exports = {
+    geraId,
     listarLivros,
     adicionarLivro,
     removerLivro,

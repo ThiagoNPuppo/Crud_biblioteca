@@ -7,7 +7,8 @@ function listarLivros() {
 
 function adicionarLivro(nome, autor) {
     if(nome && autor){
-        const novoLivro = new Book(repositoryb.geraId(), nome, autor);
+        const id = repositoryb.geraId();
+        const novoLivro = new Book(id, nome, autor);
         return repositoryb.adicionarLivro(novoLivro);
     }    
     else{

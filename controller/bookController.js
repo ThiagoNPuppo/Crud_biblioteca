@@ -13,10 +13,11 @@ function adicionarLivro(req, res) {
     const {nome, autor} = req.body;
     try{
         const livro = bookService.adicionarLivro(nome, autor);
-        res.status(201).json(livro);
+        res.status(201).json({msg: 'Livro adicionado com sucesso!'});
     }
     catch(err){
-        res.status(err.id).json({msg: err.msg});
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
     }
 }
 
