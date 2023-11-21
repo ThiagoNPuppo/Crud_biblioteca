@@ -3,7 +3,7 @@ class Book {
         this.id = id;
         this.nome = nome;
         this.autor = autor;
-        this.estado = "disponível";
+        this.estado = "Disponível";
     }
 }
 

@@ -2,29 +2,29 @@ let livro = [{
     "id": 1,
     "nome": "O cachaceiro",
     "autor": "Thiago",
-    "estado": "disponivel"
+    "estado": "Disponível"
 },
 {
     "id": 2,
     "nome": "Grêmio",
     "autor": "gremista",
-    "estado": "disponivel"  
+    "estado": "Alugado"  
 }
 ];
 
-let livrosDisponiveis = [{
-    "id": 1,
-    "nome": "O cachaceiro",
-    "autor": "Thiago",
-    "estado": "disponivel"
-},
-{
-    "id": 2,
-    "nome": "Grêmio",
-    "autor": "gremista",
-    "estado": "disponivel"  
-}];
-let livrosAlugados = [];
+// let livrosDisponiveis = [{
+//     "id": 1,
+//     "nome": "O cachaceiro",
+//     "autor": "Thiago",
+//     "estado": "disponivel"
+// },
+// {
+//     "id": 2,
+//     "nome": "Grêmio",
+//     "autor": "gremista",
+//     "estado": "disponivel"  
+// }];
+// let livrosAlugados = [];
 let idLivro = livro.length + 1;
 
 function geraId() {
@@ -37,30 +37,30 @@ function listarLivros() {
 
 function adicionarLivro(novoLivro) {
     livro.push(novoLivro);
-    livrosDisponiveis.push(novoLivro);
+    //livrosDisponiveis.push(novoLivro);
 }
 
 function alugarLivro(bookID, userID) {
     const index = livro.findIndex(livro => livro.id == bookID);
-    if (index === -1 || livro[index].alugado) {
+    if (index === -1 || livro[index].estado == "Alugado") {
         throw new Error("Livro não disponível para aluguel.");
     }
-    livrosDisponiveis.splice(index, 1); 
+    //livrosDisponiveis.splice(index, 1); 
     livro[index].alugado = "Alugado !"; 
     livro[index].userId = userID; 
-    livrosAlugados.push(livro[index]);
+    //livrosAlugados.push(livro[index]);
     return livro[index];
 }
 
 function devolverLivro(bookId) {
     const index = livro.findIndex(livro => livro.id === bookId);
-    if (index === -1 || !livro[index].alugado) {
+    if (index === -1 || !livro[index].estado == "Alugado") {
         throw new Error("Livro não está alugado.");
     }
 
-    livro[index].alugado = "Disponível"; 
-    delete livro[index].userId; 
-    livrosAlugados = livrosAlugados.filter(livro => livro.id !== bookId); 
+    livro[index].estado = "Disponível"; 
+    //delete livro[index].userId; 
+    //livrosAlugados = livrosAlugados.filter(livro => livro.id !== bookId); 
     return livro[index];
 }
 
@@ -81,19 +81,19 @@ function atualizarLivro(id, nome, autor){
     }
 }
 
-function listarLivrosAlugados(){
-    if (livrosAlugados.length === 0) {
-        throw new Error("Nenhum livro alugado.");
-    }
-    return livrosAlugados;
-}
+// function listarLivrosAlugados(){
+//     if (livrosAlugados.length === 0) {
+//         throw new Error("Nenhum livro alugado.");
+//     }
+//     return livrosAlugados;
+// }
 
-function listarLivrosDisponiveis() {
-    if (livrosDisponiveis.length === 0) {
-        throw new Error("Nenhum livro disponível.");
-    }
-    return livrosDisponiveis;
-}
+// function listarLivrosDisponiveis() {
+//     if (livrosDisponiveis.length === 0) {
+//         throw new Error("Nenhum livro disponível.");
+//     }
+//     return livrosDisponiveis;
+// }
 
 function buscarLivroPorNome(nome) {
     const buscaLivro = livro.find(livro => livro.nome == nome);
@@ -121,8 +121,8 @@ module.exports = {
     removerLivro,
     alugarLivro,
     devolverLivro,
-    listarLivrosAlugados,
-    listarLivrosDisponiveis,
+    //listarLivrosAlugados,
+    //listarLivrosDisponiveis,
     buscarLivroPorId,
     buscarLivroPorNome,
     atualizarLivro

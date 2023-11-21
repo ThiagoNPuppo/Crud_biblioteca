@@ -50,8 +50,8 @@ function alugarLivro(ids) {
     const { userID, bookID } = ids;
     const livro = bookRepository.buscarLivroPorId(bookID);
     if (livro) {
-        if (!livro.alugado) {
-            livro.alugado = true;
+        if (livro.estado == "Disponível") {
+            livro.estado = "Alugado";
             livro.usuarioAluguel = userID;
             return livro;
         } else {
@@ -69,27 +69,28 @@ function devolverLivro(bookId) {
         throw { id: 400, msg: 'Livro não está alugado.' };
     }
 
-    bookRepository.livrosDisponiveis.push(bookRepository.livroAlugado[livroAlugadoIndex]);
-    bookRepository.livroAlugado.splice(livroAlugadoIndex, 1);
+//     bookRepository.livrosDisponiveis.push(bookRepository.livroAlugado[livroAlugadoIndex]);
+//     bookRepository.livroAlugado.splice(livroAlugadoIndex, 1);
+// 
 }
 
 
 
-function getDisponiveis() {
-    try {
-        return bookRepository.listarLivrosAlugados();
-    } catch (err) {
-        throw { id: 500, msg: 'Erro ao listar os livros alugados.' };
-    }
-}
+// function getDisponiveis() {
+//     try {
+//         return bookRepository.listarLivrosAlugados();
+//     } catch (err) {
+//         throw { id: 500, msg: 'Erro ao listar os livros alugados.' };
+//     }
+// }
 
-function getAlugados() {
-    try {
-        return bookRepository.listarLivrosDisponiveis();
-    } catch (err) {
-        throw { id: 500, msg: 'Erro ao listar os livros disponíveis.' };
-    }
-}
+// function getAlugados() {
+//     try {
+//         return bookRepository.listarLivrosDisponiveis();
+//     } catch (err) {
+//         throw { id: 500, msg: 'Erro ao listar os livros disponíveis.' };
+//     }
+// }
 
 function buscarLivroPorNome(nome) {
     try {
@@ -124,8 +125,8 @@ module.exports = {
     atualizarLivro,
     alugarLivro,
     devolverLivro,
-    getAlugados,
-    getDisponiveis,
+    // getAlugados,
+    // getDisponiveis,
     buscarLivroPorNome,
     buscarLivroPorId
 }
