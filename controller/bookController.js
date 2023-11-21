@@ -67,24 +67,24 @@ function devolverLivro(req, res){
     }
 }
 
-function listarLivrosAlugados(req, res){
-    try{
-        const livrosAlugados = bookService.getAlugados();
-        res.json(livrosAlugados);
-    }catch(err){
-        res.status(err.id).json({msg: err.msg});
-    }
-}
+// function listarLivrosAlugados(req, res){
+//     try{
+//         const livrosAlugados = bookService.getAlugados();
+//         res.json(livrosAlugados);
+//     }catch(err){
+//         res.status(err.id).json({msg: err.msg});
+//     }
+// }
 
-function listarLivrosDisponiveis(req, res){
-    try{
-        const livrosDisponiveis = bookService.getDisponiveis();
-        res.json(livrosDisponiveis);
-    } catch(err){
-        const statusCode = err.id || 500;
-        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
-    } 
-}
+// function listarLivrosDisponiveis(req, res){
+//     try{
+//         const livrosDisponiveis = bookService.getDisponiveis();
+//         res.json(livrosDisponiveis);
+//     } catch(err){
+//         const statusCode = err.id || 500;
+//         res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
+//     } 
+// }
 
 function buscarLivroPorNome(req, res){
     const nome = req.params.nome;

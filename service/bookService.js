@@ -68,29 +68,7 @@ function devolverLivro(bookId) {
     if (livroAlugadoIndex === -1) {
         throw { id: 400, msg: 'Livro não está alugado.' };
     }
-
-//     bookRepository.livrosDisponiveis.push(bookRepository.livroAlugado[livroAlugadoIndex]);
-//     bookRepository.livroAlugado.splice(livroAlugadoIndex, 1);
-// 
 }
-
-
-
-// function getDisponiveis() {
-//     try {
-//         return bookRepository.listarLivrosAlugados();
-//     } catch (err) {
-//         throw { id: 500, msg: 'Erro ao listar os livros alugados.' };
-//     }
-// }
-
-// function getAlugados() {
-//     try {
-//         return bookRepository.listarLivrosDisponiveis();
-//     } catch (err) {
-//         throw { id: 500, msg: 'Erro ao listar os livros disponíveis.' };
-//     }
-// }
 
 function buscarLivroPorNome(nome) {
     try {
@@ -125,8 +103,6 @@ module.exports = {
     atualizarLivro,
     alugarLivro,
     devolverLivro,
-    // getAlugados,
-    // getDisponiveis,
     buscarLivroPorNome,
     buscarLivroPorId
 }

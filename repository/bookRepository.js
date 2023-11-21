@@ -12,19 +12,6 @@ let livro = [{
 }
 ];
 
-// let livrosDisponiveis = [{
-//     "id": 1,
-//     "nome": "O cachaceiro",
-//     "autor": "Thiago",
-//     "estado": "disponivel"
-// },
-// {
-//     "id": 2,
-//     "nome": "Grêmio",
-//     "autor": "gremista",
-//     "estado": "disponivel"  
-// }];
-// let livrosAlugados = [];
 let idLivro = livro.length + 1;
 
 function geraId() {
@@ -37,7 +24,6 @@ function listarLivros() {
 
 function adicionarLivro(novoLivro) {
     livro.push(novoLivro);
-    //livrosDisponiveis.push(novoLivro);
 }
 
 function alugarLivro(bookID, userID) {
@@ -45,10 +31,8 @@ function alugarLivro(bookID, userID) {
     if (index === -1 || livro[index].estado == "Alugado") {
         throw new Error("Livro não disponível para aluguel.");
     }
-    //livrosDisponiveis.splice(index, 1); 
     livro[index].alugado = "Alugado !"; 
     livro[index].userId = userID; 
-    //livrosAlugados.push(livro[index]);
     return livro[index];
 }
 
@@ -57,10 +41,7 @@ function devolverLivro(bookId) {
     if (index === -1 || !livro[index].estado == "Alugado") {
         throw new Error("Livro não está alugado.");
     }
-
-    livro[index].estado = "Disponível"; 
-    //delete livro[index].userId; 
-    //livrosAlugados = livrosAlugados.filter(livro => livro.id !== bookId); 
+    livro[index].estado = "Disponível";
     return livro[index];
 }
 
@@ -80,20 +61,6 @@ function atualizarLivro(id, nome, autor){
         }
     }
 }
-
-// function listarLivrosAlugados(){
-//     if (livrosAlugados.length === 0) {
-//         throw new Error("Nenhum livro alugado.");
-//     }
-//     return livrosAlugados;
-// }
-
-// function listarLivrosDisponiveis() {
-//     if (livrosDisponiveis.length === 0) {
-//         throw new Error("Nenhum livro disponível.");
-//     }
-//     return livrosDisponiveis;
-// }
 
 function buscarLivroPorNome(nome) {
     const buscaLivro = livro.find(livro => livro.nome == nome);
@@ -121,8 +88,6 @@ module.exports = {
     removerLivro,
     alugarLivro,
     devolverLivro,
-    //listarLivrosAlugados,
-    //listarLivrosDisponiveis,
     buscarLivroPorId,
     buscarLivroPorNome,
     atualizarLivro
