@@ -2,36 +2,23 @@ let livro = [{
     "id": 1,
     "nome": "O cachaceiro",
     "autor": "Thiago",
-    "estado": "disponivel"
+    "estado": "Disponivel"
 },
 {
     "id": 2,
     "nome": "Grêmio",
     "autor": "gremista",
-    "estado": "disponivel"  
+    "estado": "Disponivel"  
 }
 ];
 
-let livrosDisponiveis = [{
-    "id": 1,
-    "nome": "O cachaceiro",
-    "autor": "Thiago",
-    "estado": "disponivel"
-},
-{
-    "id": 2,
-    "nome": "Grêmio",
-    "autor": "gremista",
-    "estado": "disponivel"  
-}];
-let livrosAlugados = [];
 let idLivro = livro.length + 1;
 
 function geraId() {
     return idLivro++;
 }
 
-function listarLivros() {
+function getLivros() {
     return livro;
 }
 
@@ -40,38 +27,42 @@ function adicionarLivro(novoLivro) {
     livrosDisponiveis.push(novoLivro);
 }
 
-function alugarLivro(bookID, userID) {
+function alugaLivro(bookID, userID) {
+    const livroAlugado = livro.find(livro => livro.id == bookID && livro.estado == "Alugado");
+    if (livroAlugado) {
+        throw {id: 400, msg: "Livro não disponível para aluguel."};
+    }    
     const index = livro.findIndex(livro => livro.id == bookID);
-    if (index === -1 || livro[index].alugado) {
-        throw new Error("Livro não disponível para aluguel.");
+    if (index === -1) {
+        throw new Error("Livro não encontrado.");
     }
-    livrosDisponiveis.splice(index, 1); 
-    livro[index].alugado = "Alugado !"; 
-    livro[index].userId = userID; 
-    livrosAlugados.push(livro[index]);
+    livro[index].estado = "Alugado"; 
+    livro[index].usuarioAluguel = userID; 
     return livro[index];
 }
 
-function devolverLivro(bookId) {
-    const index = livro.findIndex(livro => livro.id === bookId);
-    if (index === -1 || !livro[index].alugado) {
-        throw new Error("Livro não está alugado.");
+function devolveLivro(bookID) {
+    const index = livro.findIndex(livro => livro.id == bookID);
+    if (index === -1) {
+        throw new Error("Livro não encontrado.");
+    }
+    if (livro[index].estado == "Disponível") {
+        throw {id: 400, msg: "Livro não está alugado."};
     }
 
-    livro[index].alugado = "Disponível"; 
-    delete livro[index].userId; 
-    livrosAlugados = livrosAlugados.filter(livro => livro.id !== bookId); 
+    livro[index].estado = "Disponível"; 
+    delete livro[index].usuarioAluguel; 
     return livro[index];
 }
 
-function removerLivro(id) {
+function removeLivro(id) {
     for(let ind in livro){
         if(livro[ind].id == id){
             return livro.splice(ind, 1);
         }
     }
 }
-function atualizarLivro(id, nome, autor){
+function atualizaLivro(id, nome, autor){
     for(let ind in livro){
         if(livro[ind].id == id){
             livro[ind].nome = nome;
@@ -79,20 +70,6 @@ function atualizarLivro(id, nome, autor){
             return livro[ind];
         }
     }
-}
-
-function listarLivrosAlugados(){
-    if (livrosAlugados.length === 0) {
-        throw new Error("Nenhum livro alugado.");
-    }
-    return livrosAlugados;
-}
-
-function listarLivrosDisponiveis() {
-    if (livrosDisponiveis.length === 0) {
-        throw new Error("Nenhum livro disponível.");
-    }
-    return livrosDisponiveis;
 }
 
 function buscarLivroPorNome(nome) {
@@ -116,14 +93,12 @@ function buscarLivroPorId(id) {
 
 module.exports = {
     geraId,
-    listarLivros,
+    getLivros,
     adicionarLivro,
-    removerLivro,
-    alugarLivro,
-    devolverLivro,
-    listarLivrosAlugados,
-    listarLivrosDisponiveis,
+    removeLivro,
+    alugaLivro,
+    devolveLivro,
     buscarLivroPorId,
     buscarLivroPorNome,
-    atualizarLivro
+    atualizaLivro
 }

@@ -1,8 +1,8 @@
 const bookRepository = require('../repository/bookRepository');
 const Book = require('../models/books');
 
-function listarLivros() {
-    const livros = bookRepository.listarLivros();
+function getLivros() {
+    const livros = bookRepository.getLivros();
     const livroAlugado = livros.map(livro => {
         if (livro.alugado) {
             const {estado, ...livroAlugado} = livro;
@@ -24,7 +24,7 @@ function adicionarLivro(nome, autor) {
     }
 }
 
-function removerLivro(id) {
+function removeLivro(id) {
     const livroDeletado = bookRepository.removerLivro(id);
     if(livroDeletado){
         return livroDeletado;
@@ -34,8 +34,8 @@ function removerLivro(id) {
     }
 }
 
-function atualizarLivro(id, nome, autor){
-    const livroAtualizado = bookRepository.atualizarLivro(id, nome, autor);
+function atualizaLivro(id, nome, autor){
+    const livroAtualizado = bookRepository.atualizaLivro(id, nome, autor);
     if(livroAtualizado){
         return livroAtualizado;
     }
@@ -45,52 +45,23 @@ function atualizarLivro(id, nome, autor){
     
 }
 
-
-function alugarLivro(ids) {
+function alugaLivro(ids) {
     const { userID, bookID } = ids;
-    const livro = bookRepository.buscarLivroPorId(bookID);
-    if (livro) {
-        if (!livro.alugado) {
-            livro.alugado = true;
-            livro.usuarioAluguel = userID;
-            return livro;
-        } else {
-            throw { id: 400, msg: 'Livro já está alugado!' };
-        }
-    } else {
-        throw { id: 404, msg: 'Livro não encontrado!' };
-    }
-}
-
-
-function devolverLivro(bookId) {
-    const livroAlugadoIndex = bookRepository.livroAlugado.findIndex(l => l.id === bookId);
-    if (livroAlugadoIndex === -1) {
-        throw { id: 400, msg: 'Livro não está alugado.' };
-    }
-
-    bookRepository.livrosDisponiveis.push(bookRepository.livroAlugado[livroAlugadoIndex]);
-    bookRepository.livroAlugado.splice(livroAlugadoIndex, 1);
-}
-
-
-
-function getDisponiveis() {
     try {
-        return bookRepository.listarLivrosAlugados();
+        return bookRepository.alugaLivro(bookID, userID);
     } catch (err) {
-        throw { id: 500, msg: 'Erro ao listar os livros alugados.' };
-    }
+        throw err;
+    } 
 }
 
-function getAlugados() {
+function devolveLivro(bookID) {
     try {
-        return bookRepository.listarLivrosDisponiveis();
+        return bookRepository.devolveLivro(bookID);
     } catch (err) {
-        throw { id: 500, msg: 'Erro ao listar os livros disponíveis.' };
+        throw err;
     }
 }
-
+   
 function buscarLivroPorNome(nome) {
     try {
         const livro = bookRepository.buscarLivroPorNome(nome);
@@ -118,14 +89,12 @@ function buscarLivroPorId(id) {
 }
 
 module.exports = {
-    listarLivros,
+    getLivros,
     adicionarLivro,
-    removerLivro,
-    atualizarLivro,
-    alugarLivro,
-    devolverLivro,
-    getAlugados,
-    getDisponiveis,
+    removeLivro,
+    atualizaLivro,
+    alugaLivro,
+    devolveLivro,
     buscarLivroPorNome,
     buscarLivroPorId
 }

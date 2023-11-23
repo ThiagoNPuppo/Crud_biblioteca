@@ -3,8 +3,6 @@ const userRouter = require('./router/userRouter');
 const bookRouter = require('./router/bookRouter');
 const acessoMiddleware = require('./middleware/acessoMiddleware')
 const loginRouter = require('./router/loginRouter');
-const User = require('./models/users');
-const Book = require('./models/books');
 
 const app = express();
 const port = 3000;
@@ -24,8 +22,8 @@ app.use('/login', loginRouter);
 
 app.use('/users', userRouter);
 app.use('/books', bookRouter);
-app.use('/disponiveis', bookRouter)
-app.use('/alugados', bookRouter)
+
+
 
 app.listen(port, () => {
     console.log(`Porta ${port} bombando!!!`);

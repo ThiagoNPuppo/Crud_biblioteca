@@ -1,8 +1,8 @@
 const bookService = require('../service/bookService');
 
-function listarLivros(req, res) {
+function getLivros(req, res) {
     try {
-        const listaLivro = bookService.listarLivros();
+        const listaLivro = bookService.getLivros();
         res.json(listaLivro);
     } catch (err) {
         const statusCode = err.id || 500;
@@ -22,10 +22,10 @@ function adicionarLivro(req, res) {
     }
 }
 
-function removerLivro(req, res) {
+function removeLivro(req, res) {
     const id = req.params.id;
     try{
-        bookService.removerLivro(id);
+        bookService.removeLivro(id);
         res.status(200).json({msg: 'Livro removido com sucesso!'});
     }
     catch(err){
@@ -33,57 +33,39 @@ function removerLivro(req, res) {
     }
 }
 
-function atualizarLivro(req, res){
+function atualizaLivro(req, res){
+    console.log("Dados recebidos para atualização:", req.body);
     const id = req.params.id;
     const {nome, autor} = req.body;
     try{
-        bookService.atualizarLivro(id, nome, autor);
+        bookService.atualizaLivro(id, nome, autor);
         res.status(200).json({msg: 'Livro atualizado com sucesso!'});
     }
     catch(err){
-        res.status(err.id).json({msg: err.msg});
+        console.error('Erro ao atualizar livro:', err);
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({msg: err.msg});
     }
 }
 
-function alugarLivro(req, res){
+function alugaLivro(req, res){
     const ids = { userID: req.params.idUser, bookID: req.params.idbook };
     try{
-        const livro = bookService.alugarLivro(ids);
+        const livro = bookService.alugaLivro(ids);
         res.status(200).json({msg: 'Livro ' + livro.nome + ' alugado com sucesso!'});
     } catch(err){
-        const statusCode = err.id || 500;
-        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
+        res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }
 
-function devolverLivro(req, res){
-    const id = req.params.id;
+function devolveLivro(req, res){
+    const bookID = req.params.bookID;
     try{
-        bookService.devolverLivro(id);
-        res.status(200).json({msg: 'Livro devolvido com sucesso!'});
-    }
-    catch(err){
-        res.status(err.id).json({msg: err.msg});
-    }
-}
-
-function listarLivrosAlugados(req, res){
-    try{
-        const livrosAlugados = bookService.getAlugados();
-        res.json(livrosAlugados);
-    }catch(err){
-        res.status(err.id).json({msg: err.msg});
-    }
-}
-
-function listarLivrosDisponiveis(req, res){
-    try{
-        const livrosDisponiveis = bookService.getDisponiveis();
-        res.json(livrosDisponiveis);
+        const livro = bookService.devolveLivro(bookID);
+        res.status(200).json({msg: 'Livro ' + livro.nome + ' devolvido com sucesso!'});
     } catch(err){
-        const statusCode = err.id || 500;
-        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
-    } 
+        res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
+    }
 }
 
 function buscarLivroPorNome(req, res){
@@ -109,14 +91,12 @@ function buscarLivroPorId(req, res){
 }
 
 module.exports = {
-    listarLivros,
+    getLivros,
     adicionarLivro,
-    removerLivro,
-    atualizarLivro,
-    alugarLivro,
-    devolverLivro,
-    listarLivrosAlugados,
-    listarLivrosDisponiveis,
+    removeLivro,
+    atualizaLivro,
+    alugaLivro,
+    devolveLivro,
     buscarLivroPorNome,
     buscarLivroPorId
 }
