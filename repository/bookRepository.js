@@ -2,13 +2,13 @@ let livro = [{
     "id": 1,
     "nome": "O cachaceiro",
     "autor": "Thiago",
-    "estado": "Disponivel"
+    "estado": "Disponível"
 },
 {
     "id": 2,
     "nome": "Grêmio",
     "autor": "gremista",
-    "estado": "Disponivel"  
+    "estado": "Disponível"  
 }
 ];
 
@@ -24,7 +24,6 @@ function getLivros() {
 
 function adicionarLivro(novoLivro) {
     livro.push(novoLivro);
-    livrosDisponiveis.push(novoLivro);
 }
 
 function alugaLivro(bookID, userID) {
