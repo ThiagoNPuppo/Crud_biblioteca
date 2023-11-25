@@ -7,7 +7,6 @@ async function getLivros() {
 
 function adicionarLivro(novoLivro) {
     livro.push(novoLivro);
-    livrosDisponiveis.push(novoLivro);
 }
 
 async function alugaLivro(bookID, userID) {
