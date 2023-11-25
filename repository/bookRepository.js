@@ -10,11 +10,14 @@ function adicionarLivro(novoLivro) {
 }
 
 async function alugaLivro(bookID, userID) {
-    const result = await pool.query('UPDATE books SET estado = $1, usuarioAluguel = $2 WHERE id = $3 RETURNING *', 
-    ["Alugado", userID, bookID]
+    const result = await pool.query('UPDATE books SET status = $1 WHERE id = $2 AND status = $3 RETURNING *',
+    ["Alugado", bookID, "Disponível"]
     );
+    if (result.rows.length === 0) {
+        throw {id: 400, msg: "Livro não disponível para aluguel."};
+    }
     return result.rows[0];
-}
+}    
 //     const livroAlugado = livro.find(livro => livro.id == bookID && livro.estado == "Alugado");
 //     if (livroAlugado) {
 //         throw {id: 400, msg: "Livro não disponível para aluguel."};
@@ -28,13 +31,12 @@ async function alugaLivro(bookID, userID) {
 //     return livro[index];
 // }
 
-async function devolveLivro(aluguelID) {
-    const result = await pool.query('UPDATE books SET estado = $1, usuarioAluguel = $2 WHERE id = $3 RETURNING *', 
-    ["Disponível", null, aluguelID]
+async function devolveLivro(bookID) {
+    const result = await pool.query('UPDATE books SET status = $1 WHERE id = $2 AND status = $3 RETURNING *', 
+    ["Disponível", bookID, "Alugado"]
     );
     return result.rows[0];
 }
-
     // const index = livro.findIndex(livro => livro.id == bookID);
     // if (index === -1) {
     //     throw new Error("Livro não encontrado.");

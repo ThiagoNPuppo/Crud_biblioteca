@@ -1,12 +1,14 @@
 const pool = require('../db');
 
-function listarUsuarios() {
-    return usuarios;
+async function getUsuarios() {
+    const result = await pool.query('SELECT * FROM users');
+    return result.rows;
 }
 
 async function adicionarUsuario(usuario) {
-    const { nome, telefone, username, senhaHash } = usuario;
-    const result = await pool.query('INSERT INTO users (nome, telefone, username, senhaHash) VALUES ($1, $2, $3, $4) RETURNING *', [nome, telefone, username, senhaHash]);
+    const { nome, telefone, email, senhaHash } = usuario;
+    const result = await pool.query('INSERT INTO users (nome, telefone, email, senhaHash) VALUES ($1, $2, $3, $4) RETURNING *', 
+    [nome, telefone, email, senhaHash]);
     return result.rows[0];
 }
 
@@ -40,7 +42,7 @@ function buscarUsuarioPorUsername(username) {
 
 
 module.exports = {
-    listarUsuarios,
+    getUsuarios,
     adicionarUsuario,
     removerUsuario,
     atualizarUsuario,

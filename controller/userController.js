@@ -1,8 +1,17 @@
 const userService = require('../service/userService');
 
-function listarUsuarios(req, res) {
-    const listarUser = userService.listarUsuarios();
-    res.json(listarUser);
+async function getUsuarios(req, res) {
+    try{
+        const usuarios = await userService.getUsuarios();
+        const usersSemAdminESenha = usuarios.map(usuario => {
+            const { is_admin, senhahash, ...usuarioSemInfo } = usuario;
+            return usuarioSemInfo;
+        });
+        res.status(200).json(usersSemAdminESenha);
+    } catch (err) {
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
+    }
 }
 
 async function adicionarUsuario(req, res) {
@@ -76,7 +85,7 @@ function loginUser(req, res) {
 
 
 module.exports = {
-    listarUsuarios,
+    getUsuarios,
     adicionarUsuario,
     removerUsuario,
     atualizarUsuario,

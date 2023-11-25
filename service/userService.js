@@ -3,20 +3,27 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 
-function listarUsuarios() {
-    return repository.listarUsuarios();
+async function getUsuarios() {
+    const usuarios = await repository.getUsuarios();
+    return usuarios;
 }
 
-async function adicionarUsuario({ nome, telefone, username, senha }) {
-    if (!nome || !telefone || !username || !senha) {
+async function adicionarUsuario({ nome, telefone, email, senha }) {
+    if (!nome || !telefone || !email || !senha) {
         throw { id: 400, msg: 'Faltam informações para adicionar o usuário!' }
     } else {
+        try{
+        console.log('senha', senha);
         const senhaHash = await bcrypt.hash(senha, saltRounds);
-        const usuario = await repository.adicionarUsuario({ nome, telefone, username, senhaHash });
+        console.log('senhaHash', senhaHash);
+        const usuario = await repository.adicionarUsuario({ nome, telefone, email, senhaHash });
         return usuario;
+    } catch (err) {
+        console.error("erro ao adicionar usuario", err);
+        throw { id: 500, msg: 'Erro'}
     }
-    
-
+    }    
+}
     // if(usuario && usuario.nome && usuario.telefone){
     //     const userAdicionado = new User(usuario.nome, usuario.telefone, usuario.senha);
     //     repository.adicionarUsuario(userAdicionado);
@@ -24,7 +31,7 @@ async function adicionarUsuario({ nome, telefone, username, senha }) {
     // else{
     //     throw {id: 400, msg: 'Faltam informações para adicionar o usuário!'}
     // }
-}
+
 
 function removerUsuario(id) {
     const userDeletado = repository.removerUsuario(id);
@@ -58,7 +65,7 @@ function buscarUsuario(id){
 }
 
 module.exports = {
-    listarUsuarios,
+    getUsuarios,
     adicionarUsuario,
     removerUsuario,
     atualizarUsuario,
