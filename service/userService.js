@@ -1,19 +1,29 @@
 const repository = require('../repository/userRepository');
-const User = require('../models/users');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 
 function listarUsuarios() {
     return repository.listarUsuarios();
 }
 
-function adicionarUsuario(usuario) {
-    if(usuario && usuario.nome && usuario.telefone){
-        const userAdicionado = new User(usuario.nome, usuario.telefone, usuario.senha);
-        repository.adicionarUsuario(userAdicionado);
+async function adicionarUsuario({ nome, telefone, username, senha }) {
+    if (!nome || !telefone || !username || !senha) {
+        throw { id: 400, msg: 'Faltam informações para adicionar o usuário!' }
+    } else {
+        const senhaHash = await bcrypt.hash(senha, saltRounds);
+        const usuario = await repository.adicionarUsuario({ nome, telefone, username, senhaHash });
+        return usuario;
     }
-    else{
-        throw {id: 400, msg: 'Faltam informações para adicionar o usuário!'}
-    }
+    
+
+    // if(usuario && usuario.nome && usuario.telefone){
+    //     const userAdicionado = new User(usuario.nome, usuario.telefone, usuario.senha);
+    //     repository.adicionarUsuario(userAdicionado);
+    // }
+    // else{
+    //     throw {id: 400, msg: 'Faltam informações para adicionar o usuário!'}
+    // }
 }
 
 function removerUsuario(id) {

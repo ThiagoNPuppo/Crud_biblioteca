@@ -1,8 +1,9 @@
 const express = require('express');
 const userRouter = require('./router/userRouter');
 const bookRouter = require('./router/bookRouter');
-const acessoMiddleware = require('./middleware/acessoMiddleware')
 const loginRouter = require('./router/loginRouter');
+const acessoMiddleware = require('./middleware/acessoMiddleware')
+
 
 const app = express();
 const port = 3000;
@@ -19,11 +20,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/login', loginRouter);
-
 app.use('/users', userRouter);
 app.use('/books', bookRouter);
-
-
 
 app.listen(port, () => {
     console.log(`Porta ${port} bombando!!!`);

@@ -1,21 +1,13 @@
-const Usuario = require('../models/users');
-const usuarioInicial = new Usuario(0, 'admin', '51.99959995', 'admin');
-let usuarios = [];
-let idUser = 1;
-usuarios.push(usuarioInicial);
-
-
-function geraId() {
-    return idUser++;
-}
+const pool = require('../db');
 
 function listarUsuarios() {
     return usuarios;
 }
 
-function adicionarUsuario(usuario) {
-    usuario.id = geraId();
-    usuarios.push(usuario);
+async function adicionarUsuario(usuario) {
+    const { nome, telefone, username, senhaHash } = usuario;
+    const result = await pool.query('INSERT INTO users (nome, telefone, username, senhaHash) VALUES ($1, $2, $3, $4) RETURNING *', [nome, telefone, username, senhaHash]);
+    return result.rows[0];
 }
 
 function removerUsuario(id) {

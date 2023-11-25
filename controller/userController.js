@@ -5,17 +5,27 @@ function listarUsuarios(req, res) {
     res.json(listarUser);
 }
 
-function adicionarUsuario(req, res) {
-    const {nome, telefone, senha} = req.body;
-    const usuario = {nome, telefone, senha};
-    try{
-        userService.adicionarUsuario(usuario);
-        res.status(201).json({msg: 'Usuário adicionado com sucesso!'});
-    }
-    catch(err){
-        res.status(err.id).json({msg: err.msg});
+async function adicionarUsuario(req, res) {
+    try {
+        const novoUsuario = await userService.adicionarUsuario(req.body);
+        const { senha, ...usuarioSemSenha } = novoUsuario;
+        res.status(201).json({msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha});
+    } catch (err) {
+        const statusCode = err.status || 500;
+        res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
     }
 }
+
+//     const {nome, telefone, senha} = req.body;
+//     const usuario = {nome, telefone, senha};
+//     try{
+//         userService.adicionarUsuario(usuario);
+//         res.status(201).json({msg: 'Usuário adicionado com sucesso!'});
+//     }
+//     catch(err){
+//         res.status(err.id).json({msg: err.msg});
+//     }
+// }
 
 function removerUsuario(req, res) {
     const id = req.params.id;
