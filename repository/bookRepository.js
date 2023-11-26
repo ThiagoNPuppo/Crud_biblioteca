@@ -35,22 +35,13 @@ async function atualizaLivro(id, titulo, autor){
     const result = await pool.query('UPDATE books SET titulo = $1, autor = $2 WHERE id = $3 RETURNING *',
     [titulo, autor, id]
     );
-    if (atualiza.rows.length === 0) {
+    if (result.rows.length === 0) {
         throw {id: 404, msg: "Livro não encontrado."};
     }
     return result.rows[0];
 }
 
-//     for(let ind in livro){
-//         if(livro[ind].id == id){
-//             livro[ind].nome = nome;
-//             livro[ind].autor = autor;
-//             return livro[ind];
-//         }
-//     }
-// }
-
-async function alugaLivro(bookID, userID) {
+async function alugaLivro(bookID) {
     const result = await pool.query('UPDATE books SET status = $1 WHERE id = $2 AND status = $3 RETURNING *',
     ["Alugado", bookID, "Disponível"]
     );
@@ -66,17 +57,6 @@ async function devolveLivro(bookID) {
     );
     return result.rows[0];
 }
-    // const index = livro.findIndex(livro => livro.id == bookID);
-    // if (index === -1) {
-    //     throw new Error("Livro não encontrado.");
-    // }
-    // if (livro[index].estado == "Disponível") {
-    //     throw {id: 400, msg: "Livro não está alugado."};
-    // }
-
-    // livro[index].estado = "Disponível"; 
-    // delete livro[index].usuarioAluguel; 
-    // return livro[index];
 
 async function statusLivro(bookID) {
     const result = await pool.query('SELECT * FROM alugueis WHERE book_id = $1 AND data_devolucao IS NULL',
@@ -98,15 +78,15 @@ function buscarLivroPorNome(nome) {
     }
 }
 
-function getLivroId(id) {
-    const buscaLivro = livro.find(livro => livro.id == id);
-    if (buscaLivro) {
-        return buscaLivro;
+async function getLivroId(id) {
+    const result = await pool.query('SELECT * FROM books WHERE id = $1', [id]
+    );
+    if (result.rows.length === 0) {
+        throw {id: 404, msg: "Livro não encontrado."};
     } else {
-        throw new Error("Livro não encontrado.");
+        return result.rows[0];
     }
-}
-
+}  
 
 module.exports = {
     getLivros,

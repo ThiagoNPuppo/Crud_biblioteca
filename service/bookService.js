@@ -31,32 +31,14 @@ async function atualizaLivro(id, titulo, autor) {
         return await bookRepository.atualizaLivro(id, titulo, autor);
     }
 } 
- 
-    
-    //     const livroAtualizado = bookRepository.atualizaLivro(id, nome, autor);
-//     if(livroAtualizado){
-//         return livroAtualizado;
-//     }
-//     else{
-//         throw {id: 404, msg: 'Livro não encontrado!'}    
-//     }
-    
- 
 
-async function alugaLivro(bookID, userID) {
-    const livroAlugado = await bookRepository.statusLivro(bookID);
-    if (livroAlugado) {
+async function alugaLivro(bookID) {
+    const livro = await bookRepository.getLivroId(bookID);
+    if (!livro || livro.status !== 'Disponível') {
         throw {id: 400, msg: "Livro não disponível para aluguel."};
     }
-    return await bookRepository.alugaLivro(bookID, userID);
+    return await bookRepository.alugaLivro(bookID);
 }
-//     const { userID, bookID } = ids;
-//     try {
-//         return bookRepository.alugaLivro(bookID, userID);
-//     } catch (err) {
-//         throw err;
-//     } 
-// }
 
 async function devolveLivro(aluguelID) {
     return await bookRepository.devolveLivro(aluguelID);
@@ -91,18 +73,26 @@ function buscarLivroPorNome(nome) {
     }
 }
 
-function getLivroId(id) {
-    try {
-        const livro = bookRepository.buscarLivroPorId(id);
-        if (livro) {
-            return livro;
-        } else {
-            throw { id: 404, msg: 'Livro não encontrado!' };
-        }
-    } catch (err) {
-        throw { id: 500, msg: 'Erro ao buscar o livro.' };
+async function getLivroId(id) {
+    const livro = await bookRepository.getLivroId(id);
+    if (livro) {
+        return livro;
+    } else {
+        throw { id: 404, msg: 'Livro não encontrado!' };
     }
 }
+
+//     try {
+//         const livro = bookRepository.buscarLivroPorId(id);
+//         if (livro) {
+//             return livro;
+//         } else {
+//             throw { id: 404, msg: 'Livro não encontrado!' };
+//         }
+//     } catch (err) {
+//         throw { id: 500, msg: 'Erro ao buscar o livro.' };
+//     }
+// }
 
 module.exports = {
     getLivros,

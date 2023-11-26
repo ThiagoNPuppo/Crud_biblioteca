@@ -60,9 +60,9 @@ async function atualizaLivro(req, res){
 
 async function alugaLivro(req, res){
     try{
-        const {userID, bookID} = req.params;
-        const aluguel = await bookService.alugaLivro(userID, bookID);
-        res.status(200).json({msg: 'Livro ' + aluguel.livro.nome + ' alugado com sucesso!'});
+        const bookId = req.params.bookID;
+        const aluguel = await bookService.alugaLivro(bookId);
+        res.status(200).json({msg: `Livro '${aluguel.titulo}' alugado com sucesso!`});
     } catch(err){
         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
     }
@@ -115,16 +115,26 @@ function buscarLivroPorNome(req, res){
     }
 }
 
-function getLivroId(req, res){
+async function getLivroId(req, res){
     const id = req.params.id;
     try{
-        const livro = bookService.buscarLivroPorId(id);
+        const livro = await bookService.getLivroId(id);
         res.status(200).json(livro);
     }
     catch(err){
         res.status(err.id).json({msg: err.msg});
     }
 }
+
+//     const id = req.params.id;
+//     try{
+//         const livro = bookService.buscarLivroPorId(id);
+//         res.status(200).json(livro);
+//     }
+//     catch(err){
+//         res.status(err.id).json({msg: err.msg});
+//     }
+// }
 
 module.exports = {
     getLivros,
