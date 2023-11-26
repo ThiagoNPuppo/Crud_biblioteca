@@ -1,50 +1,47 @@
 const bookRepository = require('../repository/bookRepository');
 
-function getLivros() {
-    return bookRepository.getLivros();
-    // const livros = bookRepository.getLivros();
-    // const livroAlugado = livros.map(livro => {
-    //     if (livro.alugado) {
-    //         const {estado, ...livroAlugado} = livro;
-    //         return livroAlugado;
-    //     }
-    //     return livro;
-    // });
-    // return livroAlugado;
+async function getLivros() {
+    return await bookRepository.getLivros();
 }
 
-function adicionarLivro(nome, autor) {
-
-    if(nome && autor){
-        const id = bookRepository.geraId();
-        const novoLivro = new Book(id, nome, autor);
-        return bookRepository.adicionarLivro(novoLivro);
-    }    
-    else{
-        throw {id: 400, msg: 'Faltam informações para adicionar o livro!'}
-    }
- }
-
-function removeLivro(id) {
-    const livroDeletado = bookRepository.removerLivro(id);
-    if(livroDeletado){
-        return livroDeletado;
-    }
-    else{
-        throw {id: 404, msg: 'Livro não encontrado!'}    
+async function addLivro(titulo, autor) {
+    const existe = await bookRepository.livroExiste(titulo, autor);
+    if (existe) {
+        throw { id: 400, msg: 'Livro já cadastrado!' };
+    } else if (!titulo || !autor) {
+        throw { id: 400, msg: 'Faltam informações para adicionar o livro!' };
+    } else {
+        return await bookRepository.addLivro(titulo, autor);
     }
 }
 
-function atualizaLivro(id, nome, autor){
-    const livroAtualizado = bookRepository.atualizaLivro(id, nome, autor);
-    if(livroAtualizado){
-        return livroAtualizado;
+async function removeLivro(id) {
+    if (!id) {
+        throw { id: 400, msg: 'É necessário informar o ID do livro!' };
+    } else {
+        return await bookRepository.removeLivro(id);
     }
-    else{
-        throw {id: 404, msg: 'Livro não encontrado!'}    
+}
+ 
+async function atualizaLivro(id, titulo, autor) {
+    const existe = await bookRepository.getLivroId(id);
+    if (!existe) {
+        throw { id: 400, msg: 'É necessário informar o ID do livro!' };
+    } else {
+        return await bookRepository.atualizaLivro(id, titulo, autor);
     }
+} 
+ 
     
-}
+    //     const livroAtualizado = bookRepository.atualizaLivro(id, nome, autor);
+//     if(livroAtualizado){
+//         return livroAtualizado;
+//     }
+//     else{
+//         throw {id: 404, msg: 'Livro não encontrado!'}    
+//     }
+    
+ 
 
 async function alugaLivro(bookID, userID) {
     const livroAlugado = await bookRepository.statusLivro(bookID);
@@ -94,7 +91,7 @@ function buscarLivroPorNome(nome) {
     }
 }
 
-function buscarLivroPorId(id) {
+function getLivroId(id) {
     try {
         const livro = bookRepository.buscarLivroPorId(id);
         if (livro) {
@@ -109,12 +106,12 @@ function buscarLivroPorId(id) {
 
 module.exports = {
     getLivros,
-    adicionarLivro,
+    addLivro,
     removeLivro,
     atualizaLivro,
     alugaLivro,
     devolveLivro,
     statusLivro,
     buscarLivroPorNome,
-    buscarLivroPorId
+    getLivroId
 }

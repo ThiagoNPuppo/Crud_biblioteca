@@ -10,43 +10,53 @@ async function getLivros(req, res) {
     }
 }
 
-function adicionarLivro(req, res) {
-    const {nome, autor} = req.body;
-    try{
-        const livro = bookService.adicionarLivro(nome, autor);
-        res.status(201).json({msg: 'Livro adicionado com sucesso!'});
-    }
-    catch(err){
+async function addLivro(req, res) {
+    try {
+        const {titulo, autor} = req.body;
+        const novoLivro = await bookService.addLivro(titulo, autor);
+        res.status(201).json({msg: `Livro  '${novoLivro.titulo}' adicionado com sucesso!`});
+    } catch (err) {
         const statusCode = err.id || 500;
-        res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
+        res.status(statusCode).json({msg: err.msg || 'Erro ao adicionar livro!'});
     }
 }
 
-function removeLivro(req, res) {
-    const id = req.params.id;
-    try{
-        bookService.removeLivro(id);
-        res.status(200).json({msg: 'Livro removido com sucesso!'});
-    }
-    catch(err){
-        res.status(err.id).json({msg: err.msg});
-    }
-}
-
-function atualizaLivro(req, res){
-    console.log("Dados recebidos para atualização:", req.body);
-    const id = req.params.id;
-    const {nome, autor} = req.body;
-    try{
-        bookService.atualizaLivro(id, nome, autor);
-        res.status(200).json({msg: 'Livro atualizado com sucesso!'});
-    }
-    catch(err){
-        console.error('Erro ao atualizar livro:', err);
+async function removeLivro(req, res) {
+    try {
+        const id = req.params.id;
+        const livroDeletado = await bookService.removeLivro(id);
+        res.status(200).json({msg: `Livro '${livroDeletado.titulo}' removido com sucesso!`});
+    } catch (err) {
         const statusCode = err.id || 500;
-        res.status(statusCode).json({msg: err.msg});
+        res.status(statusCode).json({msg: err.msg || 'Erro ao remover livro!'});
     }
 }
+ 
+async function atualizaLivro(req, res){
+    try{
+        const id = req.params.id;
+        const {titulo, autor} = req.body;
+        const livroAtualizado = await bookService.atualizaLivro(id, titulo, autor);
+        res.status(200).json({msg: `Livro '${livroAtualizado.titulo}' atualizado com sucesso!`});
+    } catch(err){
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({msg: err.msg || 'Erro ao atualizar livro!'});
+    }
+}
+    
+    // console.log("Dados recebidos para atualização:", req.body);
+    // const id = req.params.id;
+    // const {nome, autor} = req.body;
+    // try{
+    //     bookService.atualizaLivro(id, nome, autor);
+    //     res.status(200).json({msg: 'Livro atualizado com sucesso!'});
+    // }
+    // catch(err){
+    //     console.error('Erro ao atualizar livro:', err);
+    //     const statusCode = err.id || 500;
+    //     res.status(statusCode).json({msg: err.msg});
+    // }
+
 
 async function alugaLivro(req, res){
     try{
@@ -105,7 +115,7 @@ function buscarLivroPorNome(req, res){
     }
 }
 
-function buscarLivroPorId(req, res){
+function getLivroId(req, res){
     const id = req.params.id;
     try{
         const livro = bookService.buscarLivroPorId(id);
@@ -118,12 +128,12 @@ function buscarLivroPorId(req, res){
 
 module.exports = {
     getLivros,
-    adicionarLivro,
+    addLivro,
     removeLivro,
     atualizaLivro,
     alugaLivro,
     devolveLivro,
     statusLivro,
     buscarLivroPorNome,
-    buscarLivroPorId
+    getLivroId
 }
