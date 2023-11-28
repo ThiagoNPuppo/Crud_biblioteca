@@ -54,8 +54,8 @@ function atualizarUsuario(id, nome, telefone){
     
 }
 
-function buscarUsuario(id){
-    const userBuscado = repository.buscarUsuario(id);
+async function getUserId(id){
+    const userBuscado = await repository.getUserId(id);
     if(userBuscado){
         return userBuscado;
     }
@@ -64,10 +64,20 @@ function buscarUsuario(id){
     }
 }
 
+// function buscarUsuario(id){
+//     const userBuscado = repository.buscarUsuario(id);
+//     if(userBuscado){
+//         return userBuscado;
+//     }
+//     else{
+//         throw {id: 404, msg: 'Usuário não encontrado!'}    
+//     }
+// }
+
 module.exports = {
     getUsuarios,
     adicionarUsuario,
     removerUsuario,
     atualizarUsuario,
-    buscarUsuario
+    getUserId
 }

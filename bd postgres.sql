@@ -11,6 +11,7 @@ CREATE TABLE users (
 	telefone VARCHAR(25) UNIQUE,
 	email VARCHAR(25) UNIQUE,
 	senhahash VARCHAR(255) NOT NULL,
+	livro_alugado INT,
 	is_admin BOOLEAN DEFAULT false
 );
 

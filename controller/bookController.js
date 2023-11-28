@@ -43,53 +43,41 @@ async function atualizaLivro(req, res){
         res.status(statusCode).json({msg: err.msg || 'Erro ao atualizar livro!'});
     }
 }
-    
-    // console.log("Dados recebidos para atualização:", req.body);
-    // const id = req.params.id;
-    // const {nome, autor} = req.body;
-    // try{
-    //     bookService.atualizaLivro(id, nome, autor);
-    //     res.status(200).json({msg: 'Livro atualizado com sucesso!'});
-    // }
-    // catch(err){
-    //     console.error('Erro ao atualizar livro:', err);
-    //     const statusCode = err.id || 500;
-    //     res.status(statusCode).json({msg: err.msg});
-    // }
-
-
 async function alugaLivro(req, res){
-    try{
+    try {
         const bookId = req.params.bookID;
-        const aluguel = await bookService.alugaLivro(bookId);
+        const userId = req.params.userID;
+        const aluguel = await bookService.alugaLivro(bookId, userId);
         res.status(200).json({msg: `Livro '${aluguel.titulo}' alugado com sucesso!`});
-    } catch(err){
+    } catch(err) {
         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
     }
-}
-//     const ids = { userID: req.params.idUser, bookID: req.params.idbook };
+}    
+// async function alugaLivro(req, res){
 //     try{
-//         const livro = bookService.alugaLivro(ids);
-//         res.status(200).json({msg: 'Livro ' + livro.nome + ' alugado com sucesso!'});
+//         const bookId = req.params.bookID;
+//         const aluguel = await bookService.alugaLivro(bookId);
+//         res.status(200).json({msg: `Livro '${aluguel.titulo}' alugado com sucesso!`});
 //     } catch(err){
 //         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
 //     }
 // }
-
-function devolveLivro(req, res){
+async function devolveLivro(req, res){
     try {
-        const aluguelID = req.params.bookID;
-        const aluguel = bookService.devolveLivro(aluguelID);
-        res.status(200).json({msg: 'Livro ' + aluguel.livro.nome + ' devolvido com sucesso!'});
-    } catch (err) {
+        const bookId = req.params.bookID;
+        const userId = req.params.userID;
+        const devolucao = await bookService.devolveLivro(bookId, userId);
+        res.status(200).json({msg: `Livro '${devolucao.titulo}' devolvido com sucesso!`});
+    } catch(err) {
         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }
-//     const bookID = req.params.bookID;
-//     try{
-//         const livro = bookService.devolveLivro(bookID);
-//         res.status(200).json({msg: 'Livro ' + livro.nome + ' devolvido com sucesso!'});
-//     } catch(err){
+// async function devolveLivro(req, res){
+//     try {
+//         const aluguelID = req.params.bookID;
+//         const livroDevolvido = await bookService.devolveLivro(aluguelID);
+//         res.status(200).json({msg: `Livro '${livroDevolvido.titulo}' devolvido com sucesso!`});
+//     } catch (err) {
 //         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
 //     }
 // }

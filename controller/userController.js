@@ -59,16 +59,28 @@ function atualizarUsuario(req, res){
     }
 }
 
-function buscarUsuario(req, res){
+async function getUserId(req, res){
     const id = req.params.id;
     try{
-        const userBuscado = userService.buscarUsuario(id);
-        res.status(200).json(userBuscado);
+        const userBuscado = await userService.getUserId(id);
+        const { senha, ...usuarioSemSenha } = userBuscado;
+        res.status(200).json(usuarioSemSenha);
     }
     catch(err){
         res.status(err.id).json({msg: err.msg});
     }
 }
+
+// function buscarUsuario(req, res){
+//     const id = req.params.id;
+//     try{
+//         const userBuscado = userService.buscarUsuario(id);
+//         res.status(200).json(userBuscado);
+//     }
+//     catch(err){
+//         res.status(err.id).json({msg: err.msg});
+//     }
+// }
 
 function loginUser(req, res) {
     const {username, senha} = req.body;
@@ -89,6 +101,6 @@ module.exports = {
     adicionarUsuario,
     removerUsuario,
     atualizarUsuario,
-    buscarUsuario,
+    getUserId,
     loginUser,
 }

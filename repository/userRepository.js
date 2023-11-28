@@ -30,11 +30,15 @@ function atualizarUsuario(id, nome, telefone) {
         return usuario;
     }
 }
-
-function buscarUsuario(id) {
+async function getUserId(id) {
     id = parseInt(id);
-    return usuarios.find(u => u.id === id);
+    const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    return result.rows[0];
 }
+// function buscarUsuario(id) {
+//     id = parseInt(id);
+//     return usuarios.find(u => u.id === id);
+// }
 
 function buscarUsuarioPorUsername(username) {
     return usuarios.find(usuario => usuario.username === username);
@@ -46,6 +50,6 @@ module.exports = {
     adicionarUsuario,
     removerUsuario,
     atualizarUsuario,
-    buscarUsuario,
+    getUserId,
     buscarUsuarioPorUsername
 }

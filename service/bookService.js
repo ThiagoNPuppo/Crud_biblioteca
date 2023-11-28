@@ -31,25 +31,26 @@ async function atualizaLivro(id, titulo, autor) {
         return await bookRepository.atualizaLivro(id, titulo, autor);
     }
 } 
-
-async function alugaLivro(bookID) {
+async function alugaLivro(bookID, userID) {
     const livro = await bookRepository.getLivroId(bookID);
     if (!livro || livro.status !== 'Disponível') {
         throw {id: 400, msg: "Livro não disponível para aluguel."};
     }
-    return await bookRepository.alugaLivro(bookID);
+    return await bookRepository.alugaLivro(bookID, userID);
 }
-
-async function devolveLivro(aluguelID) {
-    return await bookRepository.devolveLivro(aluguelID);
-}
-    //     try {
-//         return bookRepository.devolveLivro(bookID);
-//     } catch (err) {
-//         throw err;
+// async function alugaLivro(bookID) {
+//     const livro = await bookRepository.getLivroId(bookID);
+//     if (!livro || livro.status !== 'Disponível') {
+//         throw {id: 400, msg: "Livro não disponível para aluguel."};
 //     }
+//     return await bookRepository.alugaLivro(bookID);
 // }
-   
+async function devolveLivro(bookID, userID) {
+    return await bookRepository.devolveLivro(bookID, userID);
+}
+// async function devolveLivro(aluguelID) {
+//     return await bookRepository.devolveLivro(aluguelID);
+// }
 
 async function statusLivro(bookID) {
     const status = await bookRepository.statusLivro(bookID);
