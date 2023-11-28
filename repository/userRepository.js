@@ -1,11 +1,11 @@
 const pool = require('../db');
 
-async function getUsuarios() {
+async function listUser() {
     const result = await pool.query('SELECT * FROM users');
     return result.rows;
 }
 
-async function adicionarUsuario(usuario) {
+async function addUser(usuario) {
     const { nome, telefone, email, senhaHash } = usuario;
     const result = await pool.query('INSERT INTO users (nome, telefone, email, senhaHash) VALUES ($1, $2, $3, $4) RETURNING *', 
     [nome, telefone, email, senhaHash]);
@@ -20,7 +20,6 @@ function removerUsuario(id) {
     }
 }
 
-
 function atualizarUsuario(id, nome, telefone) {
     id = parseInt(id);
     const usuario = usuarios.find(u => u.id === id);
@@ -30,15 +29,12 @@ function atualizarUsuario(id, nome, telefone) {
         return usuario;
     }
 }
+
 async function getUserId(id) {
     id = parseInt(id);
     const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
     return result.rows[0];
 }
-// function buscarUsuario(id) {
-//     id = parseInt(id);
-//     return usuarios.find(u => u.id === id);
-// }
 
 function buscarUsuarioPorUsername(username) {
     return usuarios.find(usuario => usuario.username === username);
@@ -46,8 +42,8 @@ function buscarUsuarioPorUsername(username) {
 
 
 module.exports = {
-    getUsuarios,
-    adicionarUsuario,
+    listUser,
+    addUser,
     removerUsuario,
     atualizarUsuario,
     getUserId,

@@ -1,10 +1,10 @@
 const userService = require('../service/userService');
 
-async function getUsuarios(req, res) {
+async function listUser(req, res) {
     try{
-        const usuarios = await userService.getUsuarios();
+        const usuarios = await userService.listUser();
         const usersSemAdminESenha = usuarios.map(usuario => {
-            const { is_admin, senhahash, ...usuarioSemInfo } = usuario;
+            const { telefone, livro_alugado, is_admin, senhahash, ...usuarioSemInfo } = usuario;
             return usuarioSemInfo;
         });
         res.status(200).json(usersSemAdminESenha);
@@ -14,9 +14,9 @@ async function getUsuarios(req, res) {
     }
 }
 
-async function adicionarUsuario(req, res) {
+async function addUser(req, res) {
     try {
-        const novoUsuario = await userService.adicionarUsuario(req.body);
+        const novoUsuario = await userService.addUser(req.body);
         const { senha, ...usuarioSemSenha } = novoUsuario;
         res.status(201).json({msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha});
     } catch (err) {
@@ -60,10 +60,10 @@ function atualizarUsuario(req, res){
 }
 
 async function getUserId(req, res){
-    const id = req.params.id;
+    const id = req.params.id;    
     try{
         const userBuscado = await userService.getUserId(id);
-        const { senha, ...usuarioSemSenha } = userBuscado;
+        const { senhahash, ...usuarioSemSenha } = userBuscado;
         res.status(200).json(usuarioSemSenha);
     }
     catch(err){
@@ -97,8 +97,8 @@ function loginUser(req, res) {
 
 
 module.exports = {
-    getUsuarios,
-    adicionarUsuario,
+    listUser,
+    addUser,
     removerUsuario,
     atualizarUsuario,
     getUserId,

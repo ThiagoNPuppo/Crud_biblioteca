@@ -52,8 +52,8 @@ async function alugaLivro(bookID, userID) {
     }
 
     // Atualiza o status do livro para 'Alugado'
-    await pool.query('UPDATE books SET livro_alugado = $1 WHERE id = $2', ["Alugado", bookID]);
-
+    await pool.query('UPDATE books SET status = $1 WHERE id = $2', ["Alugado", bookID]);
+    console.log('teste', userID)
     // Atualiza o livro alugado pelo usuário
     await pool.query('UPDATE users SET livro_alugado = $1 WHERE id = $2', [bookID, userID]);
 

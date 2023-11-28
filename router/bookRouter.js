@@ -13,7 +13,7 @@ bookRouter.delete('/', (req, res) => {
 })
 bookRouter.delete('/:id', bookController.removeLivro);
 bookRouter.put('/:id', bookController.atualizaLivro);
-bookRouter.put('/aluga/:bookID/:idUser', bookController.alugaLivro);
+bookRouter.put('/aluga/:bookID/:userID', bookController.alugaLivro);
 bookRouter.put('/devolve/:bookID', bookController.devolveLivro);
 
 module.exports = bookRouter;
