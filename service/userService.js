@@ -24,17 +24,9 @@ async function addUser({ nome, telefone, email, senha }) {
     }
     }    
 }
-    // if(usuario && usuario.nome && usuario.telefone){
-    //     const userAdicionado = new User(usuario.nome, usuario.telefone, usuario.senha);
-    //     repository.adicionarUsuario(userAdicionado);
-    // }
-    // else{
-    //     throw {id: 400, msg: 'Faltam informações para adicionar o usuário!'}
-    // }
 
-
-function removerUsuario(id) {
-    const userDeletado = repository.removerUsuario(id);
+async function removerUsuario(id) {
+    const userDeletado = await repository.removerUsuario(id);
     if(userDeletado){
         return userDeletado;
     }

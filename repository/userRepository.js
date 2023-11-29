@@ -12,12 +12,10 @@ async function addUser(usuario) {
     return result.rows[0];
 }
 
-function removerUsuario(id) {
+async function removerUsuario(id) {
     id = parseInt(id);
-    const index = usuarios.findIndex(u => u.id === id);
-    if (index !== -1) {
-        return usuarios.splice(index, 1);
-    }
+    userDeletado = await pool.query('DELETE FROM users WHERE id = $1', [id])
+    return userDeletado
 }
 
 function atualizarUsuario(id, nome, telefone) {

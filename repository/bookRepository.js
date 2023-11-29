@@ -62,26 +62,6 @@ async function alugaLivro(bookID, userID) {
     return result.rows[0];
 }
 
-// async function alugaLivro(bookID, userID) {
-//     await pool.query('UPDATE users SET livro_alugado = $1 WHERE id = $2 AND livro_alugado IS NULL', [bookID, userID]);
-//     const result = await pool.query(
-//         'UPDATE books SET status = $1 WHERE id = $2 AND status = $3 RETURNING *',
-//         ["Alugado", bookID, "Disponível"]
-//     );
-//     if (result.rows.length === 0) {
-//         throw {id: 400, msg: "Livro não disponível para aluguel."};
-//     }
-//     return result.rows[0];
-// }
-// async function alugaLivro(bookID) {
-//     const result = await pool.query('UPDATE books SET status = $1 WHERE id = $2 AND status = $3 RETURNING *',
-//     ["Alugado", bookID, "Disponível"]
-//     );
-//     if (result.rows.length === 0) {
-//         throw {id: 400, msg: "Livro não disponível para aluguel."};
-//     }
-//     return result.rows[0];
-// }  
 async function devolveLivro(bookID, userID) {
     // Atualiza o livro alugado para 'null' no usuário
     await pool.query('UPDATE users SET livro_alugado = NULL WHERE id = $1', [userID]);
@@ -93,28 +73,6 @@ async function devolveLivro(bookID, userID) {
     const result = await pool.query('SELECT * FROM books WHERE id = $1', [bookID]);
     return result.rows[0];
 }
-
-// async function devolveLivro(bookID, userID) {
-//     await pool.query('UPDATE users SET livro_alugado = NULL WHERE id = $1', [userID]);
-//     const result = await pool.query(
-//         'UPDATE books SET status = $1 WHERE id = $2 AND status = $3 RETURNING *', 
-//         ["Disponível", bookID, "Alugado"]
-//     );
-//     if (result.rows.length === 0) {
-//         throw {id: 400, msg: "Livro não está alugado ou não encontrado."};
-//     }
-//     return result.rows[0];
-// }
-
-// async function devolveLivro(bookID) {
-//     const result = await pool.query('UPDATE books SET status = $1 WHERE id = $2 AND status = $3 RETURNING *', 
-//     ["Disponível", bookID, "Alugado"]
-//     );
-//     if (result.rows.length === 0) {
-//         throw {id: 400, msg: "Livro não está alugado ou não encontrado."};
-//     }
-//     return result.rows[0];
-// }
 
 async function statusLivro(bookID) {
     const result = await pool.query('SELECT * FROM alugueis WHERE book_id = $1 AND data_devolucao IS NULL',
