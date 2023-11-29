@@ -1,6 +1,6 @@
 const pool = require('../db');
 
-async function getLivros() {
+async function listLivros() {
     const result = await pool.query('SELECT * FROM books');
     return result.rows;
 }
@@ -50,10 +50,17 @@ async function alugaLivro(bookID, userID) {
     if (livroDisponivel.rows.length === 0) {
         throw {id: 400, msg: "Livro não disponível para aluguel."};
     }
-
+    //verifica se o usuario não tem livro alugado
+    const usuario = await pool.query(
+        'SELECT * FROM users WHERE id = $1 AND livro_alugado IS NULL', 
+        [userID]
+    );
+    if (usuario.rows.length === 0) {
+        throw {id: 400, msg: "Usuário já possui um livro alugado."};
+    }
     // Atualiza o status do livro para 'Alugado'
     await pool.query('UPDATE books SET status = $1 WHERE id = $2', ["Alugado", bookID]);
-    console.log('teste', userID)
+    
     // Atualiza o livro alugado pelo usuário
     await pool.query('UPDATE users SET livro_alugado = $1 WHERE id = $2', [bookID, userID]);
 
@@ -63,6 +70,14 @@ async function alugaLivro(bookID, userID) {
 }
 
 async function devolveLivro(bookID, userID) {
+    // Verificar se o livro está alugado pelo usuário
+    const livroAlugado = await pool.query(
+        'SELECT * FROM books WHERE id = $1', 
+        [bookID]
+    );
+    if (livroAlugado.rows.length === 0 || livroAlugado.rows[0].status !== 'Alugado') {
+        throw {id: 400, msg: "O Livro não foi encontrado ou não está alugado."};
+    }
     // Atualiza o livro alugado para 'null' no usuário
     await pool.query('UPDATE users SET livro_alugado = NULL WHERE id = $1', [userID]);
 
@@ -72,16 +87,6 @@ async function devolveLivro(bookID, userID) {
     // Retorna as informações atualizadas do livro
     const result = await pool.query('SELECT * FROM books WHERE id = $1', [bookID]);
     return result.rows[0];
-}
-
-async function statusLivro(bookID) {
-    const result = await pool.query('SELECT * FROM alugueis WHERE book_id = $1 AND data_devolucao IS NULL',
-    [bookID]);
-    if (result.rows.length > 0) {
-        return 'Alugado';
-    } else {
-        return 'Disponível';
-    }
 }
 
 function buscarLivroPorNome(nome) {
@@ -104,14 +109,13 @@ async function getLivroId(id) {
 }  
 
 module.exports = {
-    getLivros,
+    listLivros,
     addLivro,
     livroExiste,
     removeLivro,
     atualizaLivro,
     alugaLivro,
     devolveLivro,
-    statusLivro,
     getLivroId,
     buscarLivroPorNome
 }

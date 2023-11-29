@@ -17,7 +17,7 @@ async function listUser(req, res) {
 async function addUser(req, res) {
     try {
         const novoUsuario = await userService.addUser(req.body);
-        const { senha, ...usuarioSemSenha } = novoUsuario;
+        const { senhahash, ...usuarioSemSenha } = novoUsuario;
         res.status(201).json({msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha});
     } catch (err) {
         const statusCode = err.status || 500;

@@ -1,8 +1,8 @@
 const bookService = require('../service/bookService');
 
-async function getLivros(req, res) {
+async function listLivros(req, res) {
     try {
-        const listaLivro = await bookService.getLivros();
+        const listaLivro = await bookService.listLivros();
         res.json(listaLivro);
     } catch (err) {
         const statusCode = err.id || 500;
@@ -53,15 +53,7 @@ async function alugaLivro(req, res){
         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }    
-// async function alugaLivro(req, res){
-//     try{
-//         const bookId = req.params.bookID;
-//         const aluguel = await bookService.alugaLivro(bookId);
-//         res.status(200).json({msg: `Livro '${aluguel.titulo}' alugado com sucesso!`});
-//     } catch(err){
-//         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
-//     }
-// }
+
 async function devolveLivro(req, res){
     try {
         const bookId = req.params.bookID;
@@ -69,25 +61,6 @@ async function devolveLivro(req, res){
         const devolucao = await bookService.devolveLivro(bookId, userId);
         res.status(200).json({msg: `Livro '${devolucao.titulo}' devolvido com sucesso!`});
     } catch(err) {
-        res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
-    }
-}
-// async function devolveLivro(req, res){
-//     try {
-//         const aluguelID = req.params.bookID;
-//         const livroDevolvido = await bookService.devolveLivro(aluguelID);
-//         res.status(200).json({msg: `Livro '${livroDevolvido.titulo}' devolvido com sucesso!`});
-//     } catch (err) {
-//         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
-//     }
-// }
-
-async function statusLivro(req, res){
-    try{
-        const bookID = req.params.id;
-        const status = await bookService.statusLivro(bookID);
-        res.json({msg: 'Livro ' + status.livroID + ' está ' + status.status});
-    } catch(err){
         res.status(err.id || 500).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }
@@ -114,24 +87,13 @@ async function getLivroId(req, res){
     }
 }
 
-//     const id = req.params.id;
-//     try{
-//         const livro = bookService.buscarLivroPorId(id);
-//         res.status(200).json(livro);
-//     }
-//     catch(err){
-//         res.status(err.id).json({msg: err.msg});
-//     }
-// }
-
 module.exports = {
-    getLivros,
+    listLivros,
     addLivro,
     removeLivro,
     atualizaLivro,
     alugaLivro,
     devolveLivro,
-    statusLivro,
     buscarLivroPorNome,
     getLivroId
 }
