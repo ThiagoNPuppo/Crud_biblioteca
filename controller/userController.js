@@ -1,4 +1,6 @@
 const userService = require('../service/userService');
+const jwt = require('jsonwebtoken');
+const jwtSecret = process.env.JWT_SECRET;
 
 async function listUser(req, res) {
     try{
@@ -73,11 +75,26 @@ async function getUserId(req, res){
     }
 }
 
+async function gerarToken(usuario) {
+    console.log('teste gerar token service...');
+    const payload = {
+        id: usuario.id,
+        nome: usuario.nome,
+        is_admin: usuario.is_admin // incluir a informação se é admin ou não
+    };
+    return await jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }); // Expira em 1 hora
+}
 
-function loginUser(req, res) {
-    const {username, senha} = req.body;
+// function gerarToken(usuario) {
+//     const token = jwt.sign({ id: usuario.id }, jwtSecret, { expiresIn: '1h' });
+//     return token;
+// }
+
+async function loginUser(req, res) {
+    const {email, senha} = req.body;
+    
     try{
-        const token = userService.loginUser(username, senha);
+        const token = await userService.loginUser(email, senha);
         res.status(200).json({token: token});
     }
     catch(err){
@@ -94,5 +111,6 @@ module.exports = {
     removerUsuario,
     atualizarUsuario,
     getUserId,
-    loginUser
+    loginUser,
+    gerarToken
 }

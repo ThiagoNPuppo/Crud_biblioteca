@@ -1,21 +1,30 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const userService = require('./userService');
+const userRepository = require('../repository/userRepository');
 const jwtSecret = process.env.JWT_SECRET || 'default_secret';
 
-async function Login(username, senha) {
-    const user = userRepository.findUserByUsername(username); 
-    if (user && await bcrypt.compare(senha, user.password)) {
+async function Login(email, senha) {
+    console.log('Iniciando Login service...');
+    console.log('Email recebido: ', email);
+    console.log('Senha recebida: ', senha);
+    
+    const user = await userRepository.findUserByEmail(email);
+    console.log('Usuario encontrado: ', user)
+
+    if (user && await bcrypt.compare(senha, user.senhahash)) {
+        console.log('Chave secreta usada para gerar o token:', jwtSecret);
         const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+        console.log('Token gerado: ', token);
         return { auth: true, token: token };
     }
     throw new Error("Usuário ou senha inválidos"); 
 }
 
-function validarToken(token) {
+async function validarToken(token) {
+    console.log('Validando token service...');
     try{
         const decoded = jwt.verify(token, jwtSecret);
-        const user = userRepository.findUserById(decoded.userId);
+        const user = await userRepository.findUserById(decoded.userId);
         if(!user) throw new Error("Acesso negado!");
         return decoded;
     } catch(error) {

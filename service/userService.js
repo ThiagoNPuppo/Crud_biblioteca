@@ -2,7 +2,6 @@ const repository = require('../repository/userRepository');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-
 async function listUser() {
     const usuarios = await repository.listUser();
     return usuarios;
@@ -58,11 +57,22 @@ async function getUserId(id){
     }
 }
 
+async function gerarToken(usuario) {
+    console.log('teste gerar token service...');
+    const payload = {
+        id: usuario.id,
+        nome: usuario.nome,
+        is_admin: usuario.is_admin // incluir a informação se é admin ou não
+    };
+    return await jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }); // Expira em 1 hora
+}
+
 
 module.exports = {
     listUser,
     addUser,
     removerUsuario,
     atualizarUsuario,
-    getUserId
+    getUserId,
+    gerarToken
 }

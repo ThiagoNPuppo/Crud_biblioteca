@@ -59,10 +59,27 @@ async function getUserId(id) {
     return result.rows[0];
 }
 
+async function findUserByEmail(email) {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    console.log("Usuario encontrado: ", result.rows[0]);
+    return result.rows[0];
+}
+
+
+// findUserByEmail('alicepuppo@gmail.com').then(user => {
+//     console.log(user);
+// }).catch(err => {
+//     console.error(err);
+// });
+
+
 module.exports = {
     listUser,
     addUser,
     removerUsuario,
     atualizarUsuario,
-    getUserId    
+    getUserId,
+    getUserName,
+    findUserByEmail
 }
+

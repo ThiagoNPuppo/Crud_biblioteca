@@ -1,9 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const userRouter = require('./router/userRouter');
 const bookRouter = require('./router/bookRouter');
 const loginRouter = require('./router/loginRouter');
-const acessoMiddleware = require('./middleware/acessoMiddleware')
 
+//npm install bcryptjs
+//npm install dotenv
+//set JWT_SECRET=minha-chave
 
 const app = express();
 const port = 3000;
