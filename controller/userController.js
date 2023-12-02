@@ -25,28 +25,41 @@ async function addUser(req, res) {
     }
 }
 
-function removerUsuario(req, res) {
+async function removerUsuario(req, res) {
     const id = req.params.id;
     try{
-        userService.removerUsuario(id);
+        await userService.removerUsuario(id);
         res.status(200).json({msg: 'Usuário removido com sucesso!'});
     }
     catch(err){
-        res.status(err.id).json({msg: err.msg});
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }
 
-function atualizarUsuario(req, res){
+async function atualizarUsuario(req, res){
     const id = req.params.id;
-    const {nome, telefone} = req.body;
+    const {nome, telefone, email, senha} = req.body;
     try{
-        userService.atualizarUsuario(id, nome, telefone);
+        await userService.atualizarUsuario(id, nome, telefone, email, senha);
         res.status(200).json({msg: 'Usuário atualizado com sucesso!'});
     }
     catch(err){
-        res.status(err.id).json({msg: err.msg});
+        const statusCode = err.id || 500;
+        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
     }
 }
+
+async function getUserName(req, res) {
+    try {
+        const nome = req.body.nome;
+        const usuarios = await userService.getUsuarioPorNome(nome);
+        res.json(usuarios);
+    } catch (err) {
+        res.status(500).json({ msg: 'Erro ao buscar usuário pelo nome' });
+    }
+}
+
 
 async function getUserId(req, res){
     const id = req.params.id;    
@@ -60,16 +73,6 @@ async function getUserId(req, res){
     }
 }
 
-// function buscarUsuario(req, res){
-//     const id = req.params.id;
-//     try{
-//         const userBuscado = userService.buscarUsuario(id);
-//         res.status(200).json(userBuscado);
-//     }
-//     catch(err){
-//         res.status(err.id).json({msg: err.msg});
-//     }
-// }
 
 function loginUser(req, res) {
     const {username, senha} = req.body;
@@ -91,5 +94,5 @@ module.exports = {
     removerUsuario,
     atualizarUsuario,
     getUserId,
-    loginUser,
+    loginUser
 }

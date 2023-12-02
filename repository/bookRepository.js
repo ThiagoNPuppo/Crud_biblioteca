@@ -1,7 +1,7 @@
 const pool = require('../db');
 
 async function listLivros() {
-    const result = await pool.query('SELECT * FROM books');
+    const result = await pool.query('SELECT * FROM books ORDER BY id ASC');
     return result.rows;
 }
 
@@ -89,12 +89,13 @@ async function devolveLivro(bookID, userID) {
     return result.rows[0];
 }
 
-function buscarLivroPorNome(nome) {
-    const buscaLivro = livro.find(livro => livro.nome == nome);
-    if (buscaLivro) {
-        return buscaLivro;
+async function getBooktitulo(titulo) {
+    const result = await pool.query('SELECT * FROM books WHERE titulo LIKE $1', [`%${titulo}%`]
+    );
+    if (result.rows.length === 0) {
+        throw {id: 404, msg: "Livro não encontrado."};
     } else {
-        throw new Error("Livro não encontrado.");
+        return result.rows;
     }
 }
 
@@ -116,6 +117,5 @@ module.exports = {
     atualizaLivro,
     alugaLivro,
     devolveLivro,
-    getLivroId,
-    buscarLivroPorNome
+    getLivroId
 }

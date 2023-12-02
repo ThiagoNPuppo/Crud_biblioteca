@@ -1,11 +1,18 @@
 const pool = require('../db');
 
 async function listUser() {
-    const result = await pool.query('SELECT * FROM users');
+    //lista todos os usuarios, apenas nome e emial
+    const result = await pool.query('SELECT * FROM users ORDER BY id ASC');
     return result.rows;
 }
 
 async function addUser(usuario) {
+    //verifica se o usuario já existe
+    const usuarioExiste = await pool.query('SELECT * FROM users WHERE email = $1', [usuario.email]);
+    if(usuarioExiste.rows[0]){
+        throw {id: 400, msg: 'Usuário já existe!'}
+    }
+    //adiciona o usuario
     const { nome, telefone, email, senhaHash } = usuario;
     const result = await pool.query('INSERT INTO users (nome, telefone, email, senhaHash) VALUES ($1, $2, $3, $4) RETURNING *', 
     [nome, telefone, email, senhaHash]);
@@ -14,18 +21,36 @@ async function addUser(usuario) {
 
 async function removerUsuario(id) {
     id = parseInt(id);
-    userDeletado = await pool.query('DELETE FROM users WHERE id = $1', [id])
+    //verifica se o usuario existe
+    const usuario = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    if(!usuario.rows[0]){
+        throw {id: 404, msg: 'Usuário não encontrado!'}
+    }
+    //veriica se usuario tem livro alugado
+    if(usuario.rows[0].livro_alugado){
+        throw {id: 400, msg: 'Usuário não pode se removido! Possui livro alugado!'}
+    }
+    //deleta o usuario
+    const userDeletado = await pool.query('DELETE FROM users WHERE id = $1', [id])
     return userDeletado
 }
 
-function atualizarUsuario(id, nome, telefone) {
+async function atualizarUsuario(id, nome, telefone, email, senha) {
     id = parseInt(id);
-    const usuario = usuarios.find(u => u.id === id);
-    if (usuario) {
-        usuario.nome = nome;
-        usuario.telefone = telefone;
-        return usuario;
+    //verifica se o usuario existe
+    const usuario = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    if(!usuario.rows[0]){
+        throw {id: 404, msg: 'Usuário não encontrado!'}
     }
+    //atualiza o usuario
+    const result = await pool.query('UPDATE users SET nome = $1, email = $2, telefone = $3, senhaHash = $4 WHERE id = $5 RETURNING *', 
+    [nome, telefone, email, senha, id]);
+    return result.rows[0];
+}
+
+async function getUserName(nome) {
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [nome]);
+    return result.rows[0];
 }
 
 async function getUserId(id) {
@@ -34,16 +59,10 @@ async function getUserId(id) {
     return result.rows[0];
 }
 
-function buscarUsuarioPorUsername(username) {
-    return usuarios.find(usuario => usuario.username === username);
-}
-
-
 module.exports = {
     listUser,
     addUser,
     removerUsuario,
     atualizarUsuario,
-    getUserId,
-    buscarUsuarioPorUsername
+    getUserId    
 }
