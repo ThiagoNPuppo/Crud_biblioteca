@@ -1,6 +1,5 @@
 const userService = require('../service/userService');
 const jwt = require('jsonwebtoken');
-const jwtSecret = process.env.JWT_SECRET;
 
 async function listUser(req, res) {
     try{
@@ -18,14 +17,34 @@ async function listUser(req, res) {
 
 async function addUser(req, res) {
     try {
-        const novoUsuario = await userService.addUser(req.body);
-        const { senhahash, ...usuarioSemSenha } = novoUsuario;
-        res.status(201).json({msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha});
+        const usuarioAdicionado = await userService.addUser(novoUsuario);
+        const { senhahash, ...usuarioSemSenha } = usuarioAdicionado;
+        res.status(201).json({ msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha });
     } catch (err) {
-        const statusCode = err.status || 500;
+        const statusCode = err.id || 500;
         res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
     }
 }
+
+    //para adicionar usuario só se for admin
+// async function addUser(req, res) {
+//     console.log('teste add user controller...');
+//     const usuarioAutenticado = req.usuario;
+//     const novoUsuario = req.body;
+//     console.log('usuario autenticado: ', usuarioAutenticado);
+//     try{
+//         if(!usuarioAutenticado || !usuarioAutenticado.is_admin){
+//             return res.status(403).json({msg: 'Acesso negado! Apenas administradores podem adicionar usuários.'});
+//         }
+//         const usuarioAdicionado = await userService.addUser(novoUsuario);
+//         const { senhahash, ...usuarioSemSenha } = usuarioAdicionado;
+//         res.status(201).json({ msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha });
+//     } catch (err) {
+//         const statusCode = err.status || 500;
+//         res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
+//     }
+// }
+
 
 async function removerUsuario(req, res) {
     const id = req.params.id;
@@ -76,7 +95,6 @@ async function getUserId(req, res){
 }
 
 async function gerarToken(usuario) {
-    console.log('teste gerar token service...');
     const payload = {
         id: usuario.id,
         nome: usuario.nome,
@@ -85,25 +103,6 @@ async function gerarToken(usuario) {
     return await jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }); // Expira em 1 hora
 }
 
-// function gerarToken(usuario) {
-//     const token = jwt.sign({ id: usuario.id }, jwtSecret, { expiresIn: '1h' });
-//     return token;
-// }
-
-async function loginUser(req, res) {
-    const {email, senha} = req.body;
-    
-    try{
-        const token = await userService.loginUser(email, senha);
-        res.status(200).json({token: token});
-    }
-    catch(err){
-        const statusCode = err.id || 500;    
-        res.status(statusCode).json({msg: err.msg || 'Erro interno do servidor'});
-    }
-}
-
-
 
 module.exports = {
     listUser,
@@ -111,6 +110,5 @@ module.exports = {
     removerUsuario,
     atualizarUsuario,
     getUserId,
-    loginUser,
     gerarToken
 }

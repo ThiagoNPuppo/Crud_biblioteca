@@ -6,14 +6,14 @@ const jwtSecret = process.env.JWT_SECRET || 'default_secret';
 async function Login(email, senha) {
     console.log('Iniciando Login service...');
     console.log('Email recebido: ', email);
-    console.log('Senha recebida: ', senha);
+    console.log('Senha recebida ');
     
     const user = await userRepository.findUserByEmail(email);
     console.log('Usuario encontrado: ', user)
 
     if (user && await bcrypt.compare(senha, user.senhahash)) {
         console.log('Chave secreta usada para gerar o token:', jwtSecret);
-        const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.id, is_admin: user.is_admin }, jwtSecret, { expiresIn: '1h' });
         console.log('Token gerado: ', token);
         return { auth: true, token: token };
     }

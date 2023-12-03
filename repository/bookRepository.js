@@ -15,13 +15,6 @@ async function addLivro(titulo, autor) {
     return novoLivro.rows[0];
 }
 
-async function livroExiste(titulo, autor) {
-    const result = await pool.query('SELECT * FROM books WHERE titulo = $1 AND autor = $2',
-    [titulo, autor]
-    );
-    return result.rows.length > 0;
-}
-
 async function removeLivro(id) {
     const livroDeletado = await pool.query('DELETE FROM books WHERE id = $1 RETURNING *', 
     [id]);
@@ -40,6 +33,7 @@ async function atualizaLivro(id, titulo, autor){
     }
     return result.rows[0];
 }
+
 async function alugaLivro(bookID, userID) {
     // Verificar se o livro está disponível
     const livroDisponivel = await pool.query(
@@ -112,7 +106,6 @@ async function getLivroId(id) {
 module.exports = {
     listLivros,
     addLivro,
-    livroExiste,
     removeLivro,
     atualizaLivro,
     alugaLivro,

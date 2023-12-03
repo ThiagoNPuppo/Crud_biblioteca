@@ -43,10 +43,11 @@ async function atualizaLivro(req, res){
         res.status(statusCode).json({msg: err.msg || 'Erro ao atualizar livro!'});
     }
 }
+
 async function alugaLivro(req, res){
     try {
         const bookId = req.params.bookID;
-        const userId = req.params.userID;
+        const userId = req.usuario.userID;
         const aluguel = await bookService.alugaLivro(bookId, userId);
         res.status(200).json({msg: `Livro '${aluguel.titulo}' alugado com sucesso!`});
     } catch(err) {

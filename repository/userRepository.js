@@ -7,16 +7,21 @@ async function listUser() {
 }
 
 async function addUser(usuario) {
+    
+try{
+    const { nome, telefone, email, senhaHash, is_admin } = usuario;
     //verifica se o usuario já existe
     const usuarioExiste = await pool.query('SELECT * FROM users WHERE email = $1', [usuario.email]);
     if(usuarioExiste.rows[0]){
-        throw {id: 400, msg: 'Usuário já existe!'}
-    }
-    //adiciona o usuario
-    const { nome, telefone, email, senhaHash } = usuario;
-    const result = await pool.query('INSERT INTO users (nome, telefone, email, senhaHash) VALUES ($1, $2, $3, $4) RETURNING *', 
-    [nome, telefone, email, senhaHash]);
+        throw {id: 409, msg: 'Usuário já existe!'}
+    }    
+    const result = await pool.query('INSERT INTO users (nome, telefone, email, senhaHash, is_admin) VALUES ($1, $2, $3, $4, $5) RETURNING *', 
+    [nome, telefone, email, senhaHash, is_admin]);
     return result.rows[0];
+} catch (err) {
+    console.error('Erro na função addUser:', err);
+    throw err;
+    }
 }
 
 async function removerUsuario(id) {
@@ -64,14 +69,6 @@ async function findUserByEmail(email) {
     console.log("Usuario encontrado: ", result.rows[0]);
     return result.rows[0];
 }
-
-
-// findUserByEmail('alicepuppo@gmail.com').then(user => {
-//     console.log(user);
-// }).catch(err => {
-//     console.error(err);
-// });
-
 
 module.exports = {
     listUser,

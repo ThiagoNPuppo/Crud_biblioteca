@@ -6,12 +6,13 @@ async function listUser() {
     const usuarios = await repository.listUser();
     return usuarios;
 }
-async function addUser({ nome, telefone, email, senha }) {
+
+async function addUser({ nome, telefone, email, senha, is_admin }) {
     if (!nome || !telefone || !email || !senha) {
         throw { id: 400, msg: 'Faltam informações para adicionar o usuário!' }
     } else { 
         const senhaHash = await bcrypt.hash(senha, saltRounds);
-        const usuario = await repository.addUser({ nome, telefone, email, senhaHash });
+        const usuario = await repository.addUser({ nome, telefone, email, senhaHash, is_admin });
         return usuario;
     }
 }    
@@ -58,7 +59,6 @@ async function getUserId(id){
 }
 
 async function gerarToken(usuario) {
-    console.log('teste gerar token service...');
     const payload = {
         id: usuario.id,
         nome: usuario.nome,

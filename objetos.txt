@@ -1,0 +1,27 @@
+{
+  "nome": "Thiagaaao n Puppo",
+  "telefone": "51213161",
+  "email": "novo@gmail",
+  "senha": "11111"
+}
+
+
+{
+  "email": "alicepuppo@gmail.com",
+  "senha": "3001"
+}
+
+
+{
+  "email": "thiagopuppo@gmail.com",
+  "senha": "1234"
+}
+
+
+
+{
+  "nome": "novousuario",
+  "telefone": "01020304",
+  "email": "novousuario@gmail.com",
+  "senha": "1234"
+}

@@ -1,12 +1,9 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET; // Use uma variável de ambiente para armazenar a chave secreta
+const JWT_SECRET = process.env.JWT_SECRET; 
 
 function verificarAcesso(req, res, next) {
-    console.log('Middleware de autenticação acionado');
-    
     const token = req.header('Authorization');
-    console.log('Cabeçalho Authorization:', token);
-    
+        
     if (!token) {
         console.log('Nenhum token fornecido');
         return res.status(401).json({ msg: 'Acesso negado. Nenhum token fornecido.' });
@@ -25,18 +22,19 @@ function verificarAcesso(req, res, next) {
 }
 
 
-function verificaAdministrador(req, res, next) {
-    // Verifique se o usuário é um administrador com base em como você identifica os administradores em seu sistema
-    const usuario = req.usuario; 
+function verificaAdm(req, res, next) {
+    // Verifique se o usuário é um administrador
+    const usuarioAdm = req.usuario;
+    console.log('Verificando se o usuário é administrador:', usuarioAdm);
     
-    if (usuario && usuario.is_admin) {
-        console.log('O usuário é um administrador');
-        next();
-    } else {
+    if (!usuarioAdm || !usuarioAdm.is_admin) {
         console.log('O usuário não é um administrador');
         return res.status(403).json({ msg: 'Acesso negado. Contate o Administrador.' });
+    } else {
+        console.log('O usuário é um administrador');
+        next();
     }
 }
 
-module.exports = {verificarAcesso, verificaAdministrador}
+module.exports = {verificarAcesso, verificaAdm}
 
