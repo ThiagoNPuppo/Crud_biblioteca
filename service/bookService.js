@@ -10,9 +10,9 @@ async function addLivro(titulo, autor) {
         throw { id: 400, msg: 'Livro já cadastrado!' };
     } else if (!titulo || !autor) {
         throw { id: 400, msg: 'Faltam informações para adicionar o livro!' };
-    } else {
-        return await bookRepository.addLivro(titulo, autor);
     }
+    return await bookRepository.addLivro(titulo, autor);
+    
 }
 
 async function removeLivro(id) {
@@ -29,7 +29,6 @@ async function atualizaLivro(id, titulo, autor) {
     return await bookRepository.atualizaLivro(id, titulo, autor);
 }
 
-
 async function alugaLivro(bookID, userID) {
     const livro = await bookRepository.getLivroId(bookID);
     if (!livro || livro.status !== 'Disponível') {
@@ -42,18 +41,6 @@ async function devolveLivro(bookID, userID) {
     return await bookRepository.devolveLivro(bookID, userID);
 }
 
-// function buscarLivroPorNome(nome) {
-//     try {
-//         const livro = bookRepository.buscarLivroPorNome(nome);
-//         if (livro) {
-//             return livro;
-//         } else {
-//             throw { id: 404, msg: 'Livro não encontrado!' };
-//         }
-//     } catch (err) {
-//         throw { id: 500, msg: 'Erro ao buscar o livro.' };
-//     }
-// }
 
 async function getLivroId(id) {
     const livro = await bookRepository.getLivroId(id);
@@ -64,6 +51,11 @@ async function getLivroId(id) {
     }
 }
 
+async function livroExiste(titulo, autor) {
+    return await bookRepository.livroExiste(titulo, autor);
+}
+
+
 module.exports = {
     listLivros,
     addLivro,
@@ -71,6 +63,6 @@ module.exports = {
     atualizaLivro,
     alugaLivro,
     devolveLivro,
-    //buscarLivroPorNome,
+    livroExiste,
     getLivroId
 }

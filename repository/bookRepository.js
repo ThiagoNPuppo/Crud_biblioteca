@@ -8,7 +8,7 @@ async function listLivros() {
 async function addLivro(titulo, autor) {
     const novoLivro = await pool.query('INSERT INTO books (titulo, autor) VALUES ($1, $2) RETURNING *',
     [titulo, autor]
-    ); 
+    );
     if (novoLivro.rows.length === 0) {
         throw {id: 500, msg: "Não foi possível adicionar o livro."};
     }
@@ -44,14 +44,15 @@ async function alugaLivro(bookID, userID) {
     if (livroDisponivel.rows.length === 0) {
         throw {id: 400, msg: "Livro não disponível para aluguel."};
     }
+
     //verifica se o usuario não tem livro alugado
-    const usuario = await pool.query(
-        'SELECT * FROM users WHERE id = $1 AND livro_alugado IS NULL', 
-        [userID]
-    );
+    const usuario = await pool.query('SELECT * FROM users WHERE id = $1 AND livro_alugado IS NULL', [userID]);
+    idAlugado = usuario.rows[0].livro_alugado;
+    console.log(idAlugado);
     if (usuario.rows.length === 0) {
-        throw {id: 400, msg: "Usuário já possui um livro alugado."};
+        throw {id: 400, msg: `Usuário já possui um livro alugado. id: ${idAlugado} `};
     }
+
     // Atualiza o status do livro para 'Alugado'
     await pool.query('UPDATE books SET status = $1 WHERE id = $2', ["Alugado", bookID]);
     
@@ -83,15 +84,6 @@ async function devolveLivro(bookID, userID) {
     return result.rows[0];
 }
 
-async function getBooktitulo(titulo) {
-    const result = await pool.query('SELECT * FROM books WHERE titulo LIKE $1', [`%${titulo}%`]
-    );
-    if (result.rows.length === 0) {
-        throw {id: 404, msg: "Livro não encontrado."};
-    } else {
-        return result.rows;
-    }
-}
 
 async function getLivroId(id) {
     const result = await pool.query('SELECT * FROM books WHERE id = $1', [id]
@@ -103,6 +95,16 @@ async function getLivroId(id) {
     }
 }  
 
+async function livroExiste(titulo, autor) {
+    const result = await pool.query('SELECT * FROM books WHERE titulo = $1 AND autor = $2', [titulo, autor]
+    );
+    if (result.rows.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 module.exports = {
     listLivros,
     addLivro,
@@ -110,5 +112,6 @@ module.exports = {
     atualizaLivro,
     alugaLivro,
     devolveLivro,
-    getLivroId
+    getLivroId,
+    livroExiste
 }

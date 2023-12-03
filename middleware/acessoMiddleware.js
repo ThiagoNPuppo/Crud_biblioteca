@@ -10,9 +10,7 @@ function verificarAcesso(req, res, next) {
     }
 
     try {
-        console.log('Chave secreta no ponto de verificação:', JWT_SECRET);
         const decoded = jwt.verify(token, JWT_SECRET);
-        console.log('Token decodificado:', decoded);
         req.usuario = decoded; // Adiciona as informações do usuário decodificadas à requisição
         next();
     } catch (err) {

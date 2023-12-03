@@ -5,13 +5,11 @@ const acessoMiddleware = require('../middleware/acessoMiddleware');
 
 
 bookRouter.get('/', acessoMiddleware.verificarAcesso, bookController.listLivros);
-bookRouter.get('/:id', bookController.getLivroId);
-bookRouter.post('/', acessoMiddleware.verificarAcesso, bookController.addLivro);
-//bookRouter.delete('/', acessoMiddleware.verificarAcesso, (req, res) => {
-//    res.status(400).json({ msg: 'É necessário informar o ID do livro para remover.' });
-bookRouter.delete('/:id', bookController.removeLivro);
-bookRouter.put('/:id', acessoMiddleware.verificarAcesso, bookController.atualizaLivro);
-bookRouter.put('/aluga/:bookID/:userID', bookController.alugaLivro);
-bookRouter.put('/devolve/:bookID/:userID', bookController.devolveLivro);
+bookRouter.get('/:id', acessoMiddleware.verificarAcesso, bookController.getLivroId);
+bookRouter.post('/', acessoMiddleware.verificarAcesso, acessoMiddleware.verificaAdm, bookController.addLivro);
+bookRouter.delete('/:id', acessoMiddleware.verificarAcesso, acessoMiddleware.verificaAdm, bookController.removeLivro);
+bookRouter.put('/:id', acessoMiddleware.verificarAcesso, acessoMiddleware.verificaAdm, bookController.atualizaLivro);
+bookRouter.put('/aluga/:bookID', acessoMiddleware.verificarAcesso, bookController.alugaLivro);
+bookRouter.put('/devolve/:bookID', acessoMiddleware.verificarAcesso, acessoMiddleware.verificaAdm, bookController.devolveLivro);
 
 module.exports = bookRouter;

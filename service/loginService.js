@@ -4,15 +4,13 @@ const userRepository = require('../repository/userRepository');
 const jwtSecret = process.env.JWT_SECRET || 'default_secret';
 
 async function Login(email, senha) {
-    console.log('Iniciando Login service...');
+    console.log('Iniciando LOGIN SERVICE...');
     console.log('Email recebido: ', email);
     console.log('Senha recebida ');
     
     const user = await userRepository.findUserByEmail(email);
-    console.log('Usuario encontrado: ', user)
-
+    
     if (user && await bcrypt.compare(senha, user.senhahash)) {
-        console.log('Chave secreta usada para gerar o token:', jwtSecret);
         const token = jwt.sign({ userId: user.id, is_admin: user.is_admin }, jwtSecret, { expiresIn: '1h' });
         console.log('Token gerado: ', token);
         return { auth: true, token: token };
@@ -21,7 +19,7 @@ async function Login(email, senha) {
 }
 
 async function validarToken(token) {
-    console.log('Validando token service...');
+    console.log('Validando TOKEN SERVICE...');
     try{
         const decoded = jwt.verify(token, jwtSecret);
         const user = await userRepository.findUserById(decoded.userId);
