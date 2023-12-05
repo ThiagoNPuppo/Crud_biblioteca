@@ -47,7 +47,7 @@ async function atualizaLivro(req, res){
 async function alugaLivro(req, res){
     try {
         const bookId = req.params.bookID;
-        const userId = req.usuario.userid;
+        const userId = req.usuario.userId;
         const aluguel = await bookService.alugaLivro(bookId, userId);
         res.status(200).json({msg: `Livro '${aluguel.titulo}' alugado com sucesso!`});
     } catch(err) {

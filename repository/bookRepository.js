@@ -45,13 +45,24 @@ async function alugaLivro(bookID, userID) {
         throw {id: 400, msg: "Livro não disponível para aluguel."};
     }
 
-    //verifica se o usuario não tem livro alugado
-    const usuario = await pool.query('SELECT * FROM users WHERE id = $1 AND livro_alugado IS NULL', [userID]);
-    idAlugado = usuario.rows[0].livro_alugado;
-    console.log(idAlugado);
-    if (usuario.rows.length === 0) {
-        throw {id: 400, msg: `Usuário já possui um livro alugado. id: ${idAlugado} `};
+
+    // Verifica se o usuário já tem livro alugado
+    const usuario = await pool.query('SELECT * FROM users WHERE id = $1', [userID]);
+    console.log("detalhes do usuario", usuario.rows[0]);
+    // Se o usuário não existe ou já tem um livro alugado
+    if (usuario.rows.length === 0 || usuario.rows[0].livro_alugado !== null) {
+        throw {id: 400, msg: "Usuário já possui um livro alugado."};
     }
+    //verifica se o usuario não tem livro alugado
+    // const usuario = await pool.query('SELECT * FROM users WHERE id = $1 AND livro_alugado IS NULL', [userID]);
+    // idAlugado = usuario.rows[0].livro_alugado;
+    // console.log(idAlugado);
+    // if (usuario.rows.length === 0) {
+    //     throw {id: 400, msg: `Usuário já possui um livro alugado. id: ${idAlugado} `};
+    // }
+    
+
+
 
     // Atualiza o status do livro para 'Alugado'
     await pool.query('UPDATE books SET status = $1 WHERE id = $2', ["Alugado", bookID]);
