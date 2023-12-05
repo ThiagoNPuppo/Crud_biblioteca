@@ -1,3 +1,32 @@
+
+
+
+{
+  "email": "thiagopuppo@gmail.com",
+  "senha": "1234"
+}
+
+{
+  "email": "alicepuppo@gmail.com",
+  "senha": "1234"
+}
+
+
+{
+  "nome": "Alice",
+  "telefone": "51995952127",
+  "email": "alicepuppo@gmail.com",
+  "senha": "1234"
+}
+
+
+{
+  "nome": "novousuario",
+  "telefone": "01020304",
+  "email": "novousuario@gmail.com",
+  "senha": "1234"
+}
+
 {
   "nome": "Thiagaaao n Puppo",
   "telefone": "51213161",
@@ -7,21 +36,6 @@
 
 
 {
-  "email": "alicepuppo@gmail.com",
-  "senha": "3001"
-}
-
-
-{
-  "email": "thiagopuppo@gmail.com",
-  "senha": "1234"
-}
-
-
-
-{
-  "nome": "novousuario",
-  "telefone": "01020304",
-  "email": "novousuario@gmail.com",
-  "senha": "1234"
+  "titulo": "Novo Livro",
+  "autor": "Novo autor"
 }

@@ -15,35 +15,35 @@ async function listUser(req, res) {
     }
 }
 
-async function addUser(req, res) {
-    try {
-        const usuarioAdicionado = await userService.addUser(novoUsuario);
-        const { senhahash, ...usuarioSemSenha } = usuarioAdicionado;
-        res.status(201).json({ msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha });
-    } catch (err) {
-        const statusCode = err.id || 500;
-        res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
-    }
-}
-
-    //para adicionar usuario só se for admin
 // async function addUser(req, res) {
-//     console.log('teste add user controller...');
-//     const usuarioAutenticado = req.usuario;
-//     const novoUsuario = req.body;
-//     console.log('usuario autenticado: ', usuarioAutenticado);
-//     try{
-//         if(!usuarioAutenticado || !usuarioAutenticado.is_admin){
-//             return res.status(403).json({msg: 'Acesso negado! Apenas administradores podem adicionar usuários.'});
-//         }
+//     try {
 //         const usuarioAdicionado = await userService.addUser(novoUsuario);
 //         const { senhahash, ...usuarioSemSenha } = usuarioAdicionado;
 //         res.status(201).json({ msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha });
 //     } catch (err) {
-//         const statusCode = err.status || 500;
+//         const statusCode = err.id || 500;
 //         res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
 //     }
 // }
+
+    //para adicionar usuario só se for admin
+async function addUser(req, res) {
+    console.log('teste add user controller...');
+    const usuarioAutenticado = req.usuario;
+    const novoUsuario = req.body;
+    console.log('usuario autenticado: ', usuarioAutenticado);
+    try{
+        if(!usuarioAutenticado || !usuarioAutenticado.is_admin){
+            return res.status(403).json({msg: 'Acesso negado! Apenas administradores podem adicionar usuários.'});
+        }
+        const usuarioAdicionado = await userService.addUser(novoUsuario);
+        const { senhahash, ...usuarioSemSenha } = usuarioAdicionado;
+        res.status(201).json({ msg: 'Usuário adicionado com sucesso!', usuario: usuarioSemSenha });
+    } catch (err) {
+        const statusCode = err.status || 500;
+        res.status(statusCode).json({ msg: err.msg || 'Erro interno do servidor' });
+    }
+}
 
 
 async function removerUsuario(req, res) {
